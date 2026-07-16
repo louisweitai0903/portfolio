@@ -2,7 +2,7 @@
 
 ## Current Version
 
-1.23.0
+1.24.0
 
 ## Project Health
 
@@ -10,6 +10,7 @@ Healthy. The application is built with Vite 6, React, and TypeScript. All compil
 
 ## Completed Features
 
+- Made the `links` property in the `Project` interface optional and configured the portfolio interface to conditionally render the project actions container only if `links` is defined and contains elements.
 - Connected to the **Stitch MCP** server to discover user projects and retrieve screen assets.
 - Recreated the high-fidelity portfolio designed by Stitch inside React (`src/App.tsx`, `src/App.css`, `index.html`).
 - Applied the **Stitch Industrial Mono** preset configurations (colors, fonts, body background `#fcf9f7`, carbon text `#1b1c1b`, and Roboto Mono/Condensed fonts).

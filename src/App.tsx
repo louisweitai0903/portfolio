@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes, faEnvelope, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import "./App.css";
 
@@ -13,6 +13,7 @@ import imgBkkCity from "./assets/imgs/bkk_city.JPG";
 import imgPanda from "./assets/imgs/panda.JPG";
 import imgLangkawi from "./assets/imgs/langkawi_sunset.png";
 import imgOuch from "./assets/imgs/ouch.png";
+import imgEduCore from "./assets/imgs/EduCore.png";
 import resumePdf from "./assets/resume.pdf?url";
 
 const polaroidImages = [
@@ -27,87 +28,103 @@ const polaroidImages = [
   { alt: "Chongqing", src: imgChongqing },
 ];
 
-// ─── Project data ────────────────────────────────────────────────────────────
+// ─── Project data ─────────────────────────────────────────────────────────────
 type ProjectThumbnail =
   | { type: "image"; src: string; alt?: string }
   | { type: "code"; filename: string; snippet: string };
 
-type ProjectLink = { label: string; href?: string; variant: "primary" | "outline" };
+type ProjectLink = {
+  label: string;
+  href?: string;
+  variant: "primary" | "outline";
+  icon?: boolean;
+  iconRight?: boolean;
+};
 
 interface Project {
+  id: string;
   title: string;
   year: string;
+  role: string;
   description: string;
   tags: string[];
   thumbnail: ProjectThumbnail;
-  links: ProjectLink[];
+  links?: ProjectLink[];
 }
 
 const projects: Project[] = [
   {
-    title: "AI Risk Surveyor Tool",
-    year: "2026",
+    id: "ai-risk-surveyor",
+    title: "AI Powered Risk Surveyor",
+    year: "2026 - PRESENT",
+    role: "Full Stack Developer",
     description:
-      "An intelligent document processing and site analysis application built for risk surveyors. Powered by Gemini and a RAG pipeline.",
-    tags: ["React", "FastAPI", "Gemini", "GCP"],
+      "An intelligent document processing and site analysis application built for risk surveyors. Powered by Gemini and a RAG pipeline, it automates the extraction of structured data from unstructured documents and generates comprehensive risk reports.",
+    tags: ["React", "FastAPI", "Gemini", "GCP", "RAG"],
     thumbnail: {
       type: "image",
       src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdUqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v",
       alt: "AI Risk Surveyor Tool",
     },
-    links: [
-      { label: "Visit Site", variant: "primary" },
-      { label: "Github", variant: "outline" },
-    ],
+    // links: [
+    //   { label: "Visit Site", variant: "primary" },
+    //   { label: "Visit Repo", variant: "outline", iconRight: true },
+    // ],
   },
   {
+    id: "ouch-core",
     title: "Ouch Core System",
-    year: "PRESENT",
+    year: "2025 — PRESENT",
+    role: "Core Maintainer",
     description:
-      "Core Maintainer of Ouch!'s central insurtech engine, driving the automated infrastructure that powers the policy lifecycle and claims processing for our digital-first insurance platform.",
-    tags: ["Django", "PostgreSQL", "Docker", "GCP"],
+      "Core Maintainer of Ouch!'s central insurtech engine, driving the automated infrastructure that powers the policy lifecycle and claims processing for our digital-first insurance platform. Responsible for maintaining system integrity, developing new features, and ensuring high availability.",
+    tags: ["Django", "PostgreSQL", "Docker", "GCP", "Redis"],
     thumbnail: { type: "image", src: imgOuch, alt: "Ouch Core System" },
     links: [{ label: "Visit Website", href: "https://ouch.my/", variant: "primary" }],
   },
+//   {
+//     id: "pokedex",
+//     title: "Pokedex",
+//     year: "2025",
+//     role: "Full Stack Developer",
+//     description:
+//       "A fullstack web application featuring a Django REST backend that integrates with the PokeAPI and a dynamic Vue.js frontend. Features include live search, filtering by type, and a detailed Pokémon stats view. Deployed with Nginx and automated via GitHub Actions CI/CD.",
+//     tags: ["VueJS", "Django", "Nginx", "Github Actions"],
+//     thumbnail: {
+//       type: "code",
+//       filename: "pokedex.vue",
+//       snippet: `export default {
+//   data() {
+//     return {
+//       pokemon: [],
+//       loading: true
+//     }
+//   },
+//   async mounted() {
+//     this.pokemon = await api.get('/pokemon');
+//   }
+// }`,
+//     },
+//     links: [{ label: "Visit Repo", variant: "outline", iconRight: true }],
+//   },
   {
-    title: "Pokedex Fullstack",
+    id: "educore",
+    title: "Flask-Based LLM Course Recommender - Final Year Project",
     year: "2024",
+    role: "Machine Learning Engineer",
     description:
-      "A fullstack web application featuring a Django backend that integrates with the PokeAPI and dynamic Vue.js frontend.",
-    tags: ["VueJS", "Django", "Nginx", "Github Action"],
-    thumbnail: {
-      type: "code",
-      filename: "pokedex.vue",
-      snippet: `export default {
-  data() {
-    return {
-      pokemon: [],
-      loading: true
-    }
-  },
-  async mounted() {
-    this.pokemon = await api.get('/pokemon');
-  }
-}`,
-    },
-    links: [{ label: "View Repo", variant: "outline" }],
-  },
-  {
-    title: "LLM Course Recommender",
-    year: "2024",
-    description:
-      "Machine learning-powered application helping students make data-driven decisions on university courses.",
-    tags: ["Flask", "Python", "LLMs"],
+      "A Flask-based web application that provides personalised course recommendations for IT learners, powered by content-based filtering, collaborative filtering, and NLP-driven tag extraction using large language models.",
+    tags: ["Flask", "Python", "LLMs", "NLP"],
     thumbnail: {
       type: "image",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCSRo6X4qJO9DWavQWf0AvRFGgGgfFLJuzoirX56WeifXMzASpzOKtW450nqYo_KVtWee4hXki9RXXWKPFKOjtAGaK6Mew3ZXCkVDGNMohaCGfrKLttWHtxRPYQVKX0qVx8iA6C98-OLjr7zN5Y0KHl5_V7oBpKzsRKK3I9uA6SEAc-5SM2SJW0TnghAokzt6IU8SmxZRh6hBV6gxaejnFzAMZ0TB5qzw4oOYD8F0cZE5xnqJQ1_WyD",
-      alt: "LLM Course Recommender",
+      src: imgEduCore,
+      alt: "EduCore - Course Recommender System",
     },
-    links: [{ label: "Github", variant: "outline" }],
+    // links: [{ label: "Visit Repo", variant: "outline", iconRight: true }],
   },
 ];
 
-// ─── Nav links ────────────────────────────────────────────────────────────────
+// ─── Nav ──────────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
   { id: "home", label: "HOME" },
   { id: "about", label: "ABOUT ME" },
@@ -116,10 +133,62 @@ const NAV_LINKS = [
   { id: "contact", label: "CONTACT" },
 ];
 
+// ─── Link render helper ───────────────────────────────────────────────────────
+function renderProjectLink(link: ProjectLink) {
+  const base =
+    link.variant === "primary"
+      ? "px-5 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 text-xs"
+      : "px-5 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container transition-colors text-xs";
+
+  const iconOnlyClass =
+    "w-9 h-9 flex items-center justify-center rounded-full border border-on-surface text-on-surface hover:bg-surface-container transition-colors";
+
+  const iconRightClass =
+    "px-5 py-2 flex items-center gap-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container transition-colors text-xs";
+
+  if (link.icon) {
+    return link.href ? (
+      <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.label} className={iconOnlyClass}>
+        <FontAwesomeIcon icon={faGithub} size="lg" />
+      </a>
+    ) : (
+      <button key={link.label} aria-label={link.label} className={iconOnlyClass}>
+        <FontAwesomeIcon icon={faGithub} size="lg" />
+      </button>
+    );
+  }
+
+  if (link.iconRight) {
+    return link.href ? (
+      <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={iconRightClass}>
+        {link.label} <FontAwesomeIcon icon={faGithub} />
+      </a>
+    ) : (
+      <button key={link.label} className={iconRightClass}>
+        {link.label} <FontAwesomeIcon icon={faGithub} />
+      </button>
+    );
+  }
+
+  return link.href ? (
+    <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className={base}>
+      {link.label}
+    </a>
+  ) : (
+    <button key={link.label} className={base}>
+      {link.label}
+    </button>
+  );
+}
+
+// ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   const [activeSection, setActiveSection] = useState("home");
   const [polaroidIndex, setPolaroidIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -150,7 +219,6 @@ function App() {
       });
       setActiveSection(current);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -158,7 +226,6 @@ function App() {
   useEffect(() => {
     const heroSection = document.querySelector("section#home");
     if (!heroSection) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -173,27 +240,38 @@ function App() {
       },
       { root: null, rootMargin: "0px", threshold: 0.15 }
     );
-
     heroSection.classList.add("section-out-view", "scroll-section");
     observer.observe(heroSection);
-
     return () => observer.unobserve(heroSection);
   }, []);
 
-  // Close mobile menu on scroll
+  // Close mobile drawer on scroll
   useEffect(() => {
     const close = () => setMobileMenuOpen(false);
     window.addEventListener("scroll", close, { passive: true });
     return () => window.removeEventListener("scroll", close);
   }, []);
 
-  const getLinkClass = (id: string) => {
-    return activeSection === id
+  // Close desktop dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setProjectsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const getLinkClass = (id: string) =>
+    activeSection === id
       ? "text-on-surface pb-1 transition-all border-b-2 border-on-surface font-bold text-body-md"
       : "hover:text-on-surface transition-colors duration-200 font-label-md text-on-surface-variant text-body-md";
-  };
 
-  const handleNavClick = () => setMobileMenuOpen(false);
+  const closeAll = () => {
+    setMobileMenuOpen(false);
+    setProjectsDropdownOpen(false);
+  };
 
   return (
     <div className="font-body-md text-body-md text-on-surface-variant selection:bg-primary-fixed selection:text-on-primary-fixed bg-background overflow-x-hidden">
@@ -202,17 +280,52 @@ function App() {
       <header className="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-sm border-b border-outline-variant h-16">
         <nav className="flex justify-between items-center max-w-7xl mx-auto px-4 md:px-8 h-full">
           {/* Logo */}
-          <div className="font-headline-md text-headline-md font-bold text-on-surface text-sm md:text-base">
-            TAI YOONG WEI
-          </div>
+          <div className="font-headline-md font-bold text-on-surface text-sm md:text-base">TAI YOONG WEI</div>
 
           {/* Desktop links */}
-          <div className="hidden md:flex space-x-8">
-            {NAV_LINKS.map((link) => (
-              <a key={link.id} className={getLinkClass(link.id)} href={`#${link.id}`}>
-                {link.label}
-              </a>
-            ))}
+          <div className="hidden md:flex items-center space-x-8">
+            {NAV_LINKS.map((link) =>
+              link.id === "projects" ? (
+                /* Projects with dropdown */
+                <div key="projects" className="relative" ref={dropdownRef}>
+                  <button
+                    className={`${getLinkClass("projects")} flex items-center gap-1`}
+                    onClick={() => setProjectsDropdownOpen((v) => !v)}
+                  >
+                    PROJECTS
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className={`text-[10px] transition-transform duration-200 ${projectsDropdownOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {projectsDropdownOpen && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-surface border border-outline-variant shadow-lg min-w-[220px] py-1 z-50">
+                      <a
+                        href="#projects"
+                        onClick={closeAll}
+                        className="block px-4 py-2 font-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-xs uppercase tracking-widest border-b border-outline-variant"
+                      >
+                        All Projects
+                      </a>
+                      {projects.map((p) => (
+                        <a
+                          key={p.id}
+                          href={`#${p.id}`}
+                          onClick={closeAll}
+                          className="block px-4 py-2 font-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors text-xs uppercase tracking-widest"
+                        >
+                          {p.title}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <a key={link.id} className={getLinkClass(link.id)} href={`#${link.id}`}>
+                  {link.label}
+                </a>
+              )
+            )}
           </div>
 
           {/* Right side */}
@@ -225,7 +338,6 @@ function App() {
             >
               Resume
             </a>
-            {/* Hamburger — mobile only */}
             <button
               className="md:hidden w-10 h-10 flex items-center justify-center text-on-surface"
               onClick={() => setMobileMenuOpen((v) => !v)}
@@ -239,17 +351,53 @@ function App() {
         {/* Mobile drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-surface border-b border-outline-variant shadow-lg">
-            <div className="flex flex-col px-4 py-4 gap-5">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.id}
-                  href={`#${link.id}`}
-                  onClick={handleNavClick}
-                  className={`${getLinkClass(link.id)} text-base py-1`}
-                >
-                  {link.label}
-                </a>
-              ))}
+            <div className="flex flex-col px-4 py-4 gap-1">
+              {NAV_LINKS.map((link) =>
+                link.id === "projects" ? (
+                  <div key="projects">
+                    <button
+                      className="w-full flex items-center justify-between py-3 font-label-md text-on-surface-variant hover:text-on-surface uppercase tracking-widest text-sm"
+                      onClick={() => setMobileProjectsOpen((v) => !v)}
+                    >
+                      PROJECTS
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        className={`text-[10px] transition-transform duration-200 ${mobileProjectsOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {mobileProjectsOpen && (
+                      <div className="pl-4 flex flex-col gap-1 border-l border-outline-variant ml-1 mb-2">
+                        <a
+                          href="#projects"
+                          onClick={closeAll}
+                          className="py-2 font-label-md text-on-surface-variant hover:text-on-surface uppercase tracking-widest text-xs"
+                        >
+                          All Projects
+                        </a>
+                        {projects.map((p) => (
+                          <a
+                            key={p.id}
+                            href={`#${p.id}`}
+                            onClick={closeAll}
+                            className="py-2 font-label-md text-on-surface-variant hover:text-on-surface uppercase tracking-widest text-xs"
+                          >
+                            {p.title}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <a
+                    key={link.id}
+                    href={`#${link.id}`}
+                    onClick={closeAll}
+                    className={`${getLinkClass(link.id)} py-3 text-sm`}
+                  >
+                    {link.label}
+                  </a>
+                )
+              )}
             </div>
           </div>
         )}
@@ -287,7 +435,6 @@ function App() {
         {/* ── About Me ── */}
         <section className="py-16 md:py-24 bg-surface" id="about">
           <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-            {/* Text */}
             <div className="lg:col-span-7">
               <h2 className="font-headline-lg text-on-surface mb-6 md:mb-8 uppercase border-b-2 border-on-surface inline-block pb-2 text-[22px] sm:text-[32px] md:text-[48px]">
                 A little bit about me
@@ -308,22 +455,15 @@ function App() {
                   <ul className="space-y-4 font-body-md text-sm md:text-base">
                     <li className="flex gap-4 items-start">
                       <span className="text-on-surface font-bold shrink-0">01.</span>
-                      <span>
-                        <strong>On the road:</strong> Car spotting or planning my next
-                        road trip.
-                      </span>
+                      <span><strong>On the road:</strong> Exploring local car culture, driving dynamics, or planning my next road trip.</span>
                     </li>
                     <li className="flex gap-4 items-start">
                       <span className="text-on-surface font-bold shrink-0">02.</span>
-                      <span>
-                        <strong>In a lobby:</strong> Diving into games like Dota2 or CS2.
-                      </span>
+                      <span><strong>In a lobby:</strong> Diving into games like Dota2 or CS2.</span>
                     </li>
                     <li className="flex gap-4 items-start">
                       <span className="text-on-surface font-bold shrink-0">03.</span>
-                      <span>
-                        <strong>Exploring:</strong> Traveling to new destinations and hunting down the best local eats.
-                      </span>
+                      <span><strong>Exploring:</strong> Traveling to new destinations and hunting down the best local eats.</span>
                     </li>
                   </ul>
                 </div>
@@ -331,23 +471,13 @@ function App() {
                   I love connecting with fellow developers, car enthusiasts, and gamers. Let's chat!
                 </p>
                 <div className="flex gap-6 pt-6 md:pt-8 border-t border-outline-variant">
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="mailto:louisweitai@gmail.com" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faEnvelope} size="lg" />
-                  </a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.linkedin.com/in/yoong-wei-tai-b4a403306/" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faLinkedin} size="lg" />
-                  </a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.instagram.com/louis.tai/" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faInstagram} size="lg" />
-                  </a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://github.com/Louis-tai0309" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faGithub} size="lg" />
-                  </a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="mailto:louisweitai@gmail.com" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faEnvelope} size="lg" /></a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.linkedin.com/in/yoong-wei-tai-b4a403306/" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faLinkedin} size="lg" /></a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.instagram.com/louis.tai/" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} size="lg" /></a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://github.com/louisweitai0903" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faGithub} size="lg" /></a>
                 </div>
               </div>
             </div>
-
-            {/* Polaroid stack — hidden on mobile, visible on lg+ */}
             <div className="hidden lg:flex lg:col-span-5 justify-end">
               <div className="polaroid-stack">
                 {polaroidImages.map((img, idx) => (
@@ -369,95 +499,60 @@ function App() {
               </h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24">
-              {/* Left: Work Experience */}
               <div>
-                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
-                  Work Experiences
-                </h3>
+                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">Work Experiences</h3>
                 <div className="relative space-y-10 md:space-y-12 pl-10 md:pl-12">
-                  {/* Current */}
                   <div className="relative">
                     <div className="absolute -left-8 top-1">
                       <div className="timeline-dot active"></div>
                       <div className="timeline-line"></div>
                     </div>
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">
-                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">
-                        Junior Fullstack Software Engineer
-                      </h4>
-                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">
-                        Ouch! | April 2025 - Present
-                      </div>
-                      <p className="text-on-surface-variant font-body-md text-sm">
-                        Building digital-first insurtech solutions focusing on core system maintenance and feature
-                        development.
-                      </p>
+                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">Junior Fullstack Software Engineer</h4>
+                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">Ouch! | April 2025 - Present</div>
+                      <p className="text-on-surface-variant font-body-md text-sm">Building digital-first insurtech solutions focusing on core system maintenance and feature development.</p>
                     </div>
                   </div>
-                  {/* Internship */}
                   <div className="relative">
                     <div className="absolute -left-8 top-1">
                       <div className="timeline-dot"></div>
                     </div>
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">
-                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">
-                        Software Engineer Intern
-                      </h4>
-                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">
-                        Ouch! | Jan 2025 - April 2025
-                      </div>
-                      <p className="text-on-surface-variant font-body-md text-sm">
-                        Contributed to internal tools and the Pokedex project using Django and VueJS.
-                      </p>
+                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">Software Engineer Intern</h4>
+                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">Ouch! | Jan 2025 - April 2025</div>
+                      <p className="text-on-surface-variant font-body-md text-sm">Contributed to internal tools and the Pokedex project using Django and VueJS.</p>
                     </div>
                   </div>
                 </div>
-
                 <div className="mt-12 md:mt-16">
-                  <h3 className="font-headline-md text-on-surface mb-6 md:mb-8 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
-                    Languages
-                  </h3>
+                  <h3 className="font-headline-md text-on-surface mb-6 md:mb-8 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">Languages</h3>
                   <div className="flex flex-wrap gap-3">
                     {["ENGLISH", "MANDARIN", "CANTONESE", "MALAY"].map((lang) => (
-                      <span key={lang} className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant text-xs">
-                        {lang}
-                      </span>
+                      <span key={lang} className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant text-xs">{lang}</span>
                     ))}
                   </div>
                 </div>
               </div>
-
-              {/* Right: Dev Stack */}
               <div>
-                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
-                  Dev Stack
-                </h3>
+                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">Dev Stack</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {[
                     { title: "Languages", items: ["Python", "JavaScript", "TypeScript"] },
                     { title: "Frameworks", items: ["Django, FastAPI", "NodeJs, React", "VueJs, Tailwind"] },
                     { title: "Infrastructure", items: ["Docker, GCP", "Nginx, CI/CD"] },
-                    { title: "AI / ML", items: ["Gemini, Codex", "RAG Pipelines", "Claude Code"] },
+                    { title: "AI / ML", items: ["Gemini, Codex", "RAG Pipelines"] },
                   ].map((card) => (
                     <div key={card.title} className="bg-surface p-5 md:p-6 border border-outline-variant">
-                      <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">
-                        {card.title}
-                      </h4>
+                      <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">{card.title}</h4>
                       <ul className="font-body-md space-y-2 text-on-surface-variant text-sm">
-                        {card.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
+                        {card.items.map((item) => <li key={item}>{item}</li>)}
                       </ul>
                     </div>
                   ))}
                   <div className="bg-surface p-5 md:p-6 border border-outline-variant sm:col-span-2">
-                    <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">
-                      Tools &amp; Systems
-                    </h4>
+                    <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">Tools &amp; Systems</h4>
                     <div className="flex flex-wrap gap-x-4 md:gap-x-6 gap-y-2 font-body-md text-on-surface-variant text-sm">
-                      {["Git / Github", "PostgreSQL", "Prisma ORM", "Redis", "Postman"].map((tool) => (
-                        <span key={tool}>{tool}</span>
-                      ))}
+                      {["Git / Github", "PostgreSQL", "Prisma ORM", "Redis", "Postman"].map((tool) => <span key={tool}>{tool}</span>)}
                     </div>
                   </div>
                 </div>
@@ -469,83 +564,91 @@ function App() {
         {/* ── Projects ── */}
         <section className="py-16 md:py-24 bg-surface" id="projects">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <div className="mb-10 md:mb-16 border-b-2 border-on-surface pb-4 md:pb-6 text-center">
+            <div className="mb-12 md:mb-20 border-b-2 border-on-surface pb-4 md:pb-6 text-center">
               <h2 className="font-headline-lg text-on-surface uppercase text-[22px] sm:text-[32px] md:text-[48px]">
                 Selected Projects
               </h2>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-              {projects.map((project) => (
-                <div
-                  key={project.title}
-                  className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group"
-                >
-                  {/* Thumbnail */}
-                  {project.thumbnail.type === "image" ? (
-                    <div className="aspect-video overflow-hidden border-b border-outline-variant bg-surface-container-low flex items-center justify-center">
-                      <img
-                        className="w-full h-full object-cover"
-                        src={project.thumbnail.src}
-                        alt={project.thumbnail.alt ?? project.title}
-                      />
-                    </div>
-                  ) : (
-                    <div className="aspect-video bg-inverse-surface p-4 md:p-6 font-body-md overflow-hidden flex flex-col">
-                      <div className="flex items-center gap-2 mb-3 md:mb-4 border-b border-surface-variant pb-2">
-                        <span className="text-surface font-bold text-xs md:text-sm">{project.thumbnail.filename}</span>
-                      </div>
-                      <pre className="text-surface-dim text-xs overflow-hidden">
-                        <code className="italic">{project.thumbnail.snippet}</code>
-                      </pre>
-                    </div>
-                  )}
 
-                  {/* Body */}
-                  <div className="p-5 md:p-8 flex flex-col flex-grow">
-                    <div className="flex justify-between items-start mb-3 md:mb-4 gap-2">
-                      <h3 className="font-headline-md text-on-surface uppercase text-base md:text-2xl leading-snug">
+            <div className="flex flex-col divide-y divide-outline-variant">
+              {projects.map((project, i) => (
+                <div key={project.id} id={project.id} className="py-12 md:py-16 scroll-mt-20">
+                  {/* Index + year row */}
+                  <div className="flex items-center gap-4 mb-6 md:mb-8">
+                    <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="h-px flex-1 bg-outline-variant" />
+                    <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
+                      {project.year}
+                    </span>
+                  </div>
+
+                  {/* Card: image left, content right */}
+                  <div className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-8 md:gap-12 items-start`}>
+
+                    {/* Thumbnail */}
+                    <div className="w-full md:w-[45%] shrink-0">
+                      {project.thumbnail.type === "image" ? (
+                        <div className="aspect-video overflow-hidden border border-outline-variant bg-surface-container-low">
+                          <img
+                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                            src={project.thumbnail.src}
+                            alt={project.thumbnail.alt ?? project.title}
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-video bg-inverse-surface p-4 md:p-6 overflow-hidden flex flex-col border border-outline-variant">
+                          <div className="flex items-center gap-2 mb-3 border-b border-surface-variant pb-2">
+                            <span className="text-surface font-bold text-xs md:text-sm">{project.thumbnail.filename}</span>
+                          </div>
+                          <pre className="text-surface-dim text-xs overflow-hidden flex-1">
+                            <code className="italic">{project.thumbnail.snippet}</code>
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex flex-col flex-1">
+                      {/* Role badge */}
+                      <span className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
+                        {project.role}
+                      </span>
+
+                      {/* Title */}
+                      <h3 className="font-headline-lg text-on-surface uppercase text-[20px] sm:text-[26px] md:text-[32px] leading-tight mb-4 md:mb-6">
                         {project.title}
                       </h3>
-                      <span className="font-label-md text-on-surface-variant shrink-0 text-xs">{project.year}</span>
-                    </div>
-                    <p className="text-on-surface-variant font-body-md mb-6 md:mb-8 flex-grow text-sm">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
-                      {project.tags.map((tag) => (
-                        <span key={tag} className="px-2 py-1 md:px-3 bg-surface-container-high text-on-surface font-label-md uppercase text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex flex-wrap gap-3">
-                      {project.links.map((link) =>
-                        link.href ? (
-                          <a
-                            key={link.label}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={
-                              link.variant === "primary"
-                                ? "px-5 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 text-center text-xs"
-                                : "px-5 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container text-xs"
-                            }
-                          >
-                            {link.label}
-                          </a>
-                        ) : (
-                          <button
-                            key={link.label}
-                            className={
-                              link.variant === "primary"
-                                ? "px-5 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 text-xs"
-                                : "px-5 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container text-xs"
-                            }
-                          >
-                            {link.label}
-                          </button>
-                        )
+
+                      {/* Divider */}
+                      <div className="h-px bg-outline-variant mb-4 md:mb-6" />
+
+                      {/* Overview */}
+                      <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-2">
+                        Project Overview
+                      </p>
+                      <p className="text-on-surface-variant font-body-md text-sm leading-relaxed mb-6 md:mb-8">
+                        {project.description}
+                      </p>
+
+                      {/* Tags */}
+                      <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
+                        Tech Stack
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
+                        {project.tags.map((tag) => (
+                          <span key={tag} className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase text-xs border border-outline-variant">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Links */}
+                      {project.links && project.links.length > 0 && (
+                        <div className="flex flex-wrap gap-3">
+                          {project.links.map((link) => renderProjectLink(link))}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -556,7 +659,7 @@ function App() {
         </section>
 
         {/* ── Contact ── */}
-        <section className="py-24 md:py-40 min-h-[60vh] bg-surface-container-low flex items-center" id="contact">
+        <section className="py-24 md:py-40 min-h-[80vh] bg-surface-container-low flex items-center" id="contact">
           <div className="max-w-7xl mx-auto px-4 md:px-8 text-center w-full">
             <h2 className="font-headline-lg text-on-surface mb-4 md:mb-6 uppercase text-[22px] sm:text-[32px] md:text-[48px]">
               Get In Touch
@@ -568,7 +671,7 @@ function App() {
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
               {[
                 { href: "mailto:louisweitai@gmail.com", icon: faEnvelope, label: "Email" },
-                { href: "https://github.com/Louis-tai0309", icon: faGithub, label: "Github" },
+                { href: "https://github.com/louisweitai0903", icon: faGithub, label: "Github" },
                 { href: "https://www.linkedin.com/in/yoong-wei-tai-b4a403306/", icon: faLinkedin, label: "LinkedIn" },
                 { href: "https://www.instagram.com/louis.tai/", icon: faInstagram, label: "Instagram" },
               ].map(({ href, icon, label }) => (
@@ -587,12 +690,8 @@ function App() {
       {/* ── Footer ── */}
       <footer className="w-full py-8 md:py-12 border-t border-outline-variant bg-surface">
         <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-4 md:px-8 gap-4 md:gap-6">
-          <div className="font-headline-md text-on-surface font-bold uppercase text-sm md:text-base">
-            Tai Yoong Wei
-          </div>
-          <div className="flex gap-6">
-            <p className="font-label-md text-on-surface-variant uppercase text-xs">© 2026 Tai Yoong Wei</p>
-          </div>
+          <div className="font-headline-md text-on-surface font-bold uppercase text-sm md:text-base">Tai Yoong Wei</div>
+          <p className="font-label-md text-on-surface-variant uppercase text-xs">© 2026 Tai Yoong Wei</p>
         </div>
       </footer>
     </div>

@@ -1,5 +1,29 @@
 # PROGRESS
 
+## 2026-07-16
+
+### Task Description
+
+Make the `links` property in the `Project` interface optional in `src/App.tsx` and conditionally render the actions container in the UI.
+
+### Files Modified
+
+- [App.tsx](file:///Users/louis/coding/portfolio/src/App.tsx)
+- [STATUS.md](file:///Users/louis/coding/portfolio/STATUS.md)
+- [PROGRESS.md](file:///Users/louis/coding/portfolio/PROGRESS.md)
+- [HANDOFF.md](file:///Users/louis/coding/portfolio/HANDOFF.md)
+
+### Summary of Implementation
+
+- Changed the `links` field inside the `Project` interface to be optional (`links?: ProjectLink[]`).
+- Updated the projects rendering logic to conditionally render the action links container only when `project.links` is defined and contains elements.
+- Verified build and linter cleanliness.
+
+### Validation Performed
+
+- Checked eslint cleanliness using `npm run lint`.
+- Successfully compiled assets via `npm run build`.
+
 ## 2026-07-15
 
 ### Task Description
