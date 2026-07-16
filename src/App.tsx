@@ -4,16 +4,107 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import "./App.css";
 
+import imgCars from "./assets/imgs/cars.png";
+import imgSl from "./assets/imgs/sl.png";
+import imgChongqing from "./assets/imgs/chongqing.png";
+import imgJiuzaigou from "./assets/imgs/jiuzaigou.JPG";
+import imgBkkTemple from "./assets/imgs/bkk_temple.JPG";
+import imgBkkCity from "./assets/imgs/bkk_city.JPG";
+import imgPanda from "./assets/imgs/panda.JPG";
+import imgLangkawi from "./assets/imgs/langkawi_sunset.png";
+import imgOuch from "./assets/imgs/ouch.png";
+import resumePdf from "./assets/latest_resume.pdf?url";
+
 const polaroidImages = [
-  { alt: "Car Enthusiast", src: "./imgs/cars.png" },
-  { alt: "Gaming Setup", src: "./imgs/sl.png" },
-  { alt: "Travel and Food", src: "./imgs/chongqing.png" },
-  { alt: "Gaming Setup", src: "./imgs/jiuzaigou.jpg" },
-  { alt: "Gaming Setup", src: "./imgs/bkk_temple.jpg" },
-  { alt: "Gaming Setup", src: "./imgs/bkk_city.jpg" },
-  { alt: "Gaming Setup", src: "./imgs/panda.JPG" },
-  { alt: "Gaming Setup", src: "./imgs/langkawi_sunset.png" },
-  { alt: "Gaming Setup", src: "./imgs/chongqing.png" }
+  { alt: "Car Enthusiast", src: imgCars },
+  { alt: "Gaming Setup", src: imgSl },
+  { alt: "Travel and Food", src: imgChongqing },
+  { alt: "Jiuzaigou", src: imgJiuzaigou },
+  { alt: "Bangkok Temple", src: imgBkkTemple },
+  { alt: "Bangkok City", src: imgBkkCity },
+  { alt: "Panda", src: imgPanda },
+  { alt: "Langkawi Sunset", src: imgLangkawi },
+  { alt: "Chongqing", src: imgChongqing }
+];
+
+// ─── Project data ───────────────────────────────────────────────────────────
+type ProjectThumbnail =
+  | { type: "image"; src: string; alt?: string }
+  | { type: "code"; filename: string; snippet: string };
+
+type ProjectLink = { label: string; href?: string; variant: "primary" | "outline" };
+
+interface Project {
+  title: string;
+  year: string;
+  description: string;
+  tags: string[];
+  thumbnail: ProjectThumbnail;
+  links: ProjectLink[];
+}
+
+const projects: Project[] = [
+  {
+    title: "AI Risk Surveyor Tool",
+    year: "2026",
+    description:
+      "An intelligent document processing and site analysis application built for risk surveyors. Powered by Gemini and a RAG pipeline.",
+    tags: ["React", "FastAPI", "Gemini", "GCP"],
+    thumbnail: {
+      type: "image",
+      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdUqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v",
+      alt: "AI Risk Surveyor Tool",
+    },
+    links: [
+      { label: "Visit Site", variant: "primary" },
+      { label: "Github", variant: "outline" },
+    ],
+  },
+  {
+    title: "Ouch Core System",
+    year: "PRESENT",
+    description:
+      "Core Maintainer of Ouch!'s central insurtech engine, driving the automated infrastructure that powers the policy lifecycle and claims processing for our digital-first insurance platform.",
+    tags: ["Django", "PostgreSQL", "Docker", "GCP"],
+    thumbnail: { type: "image", src: imgOuch, alt: "Ouch Core System" },
+    links: [{ label: "Visit Website", href: "https://ouch.my/", variant: "primary" }],
+  },
+  {
+    title: "Pokedex Fullstack",
+    year: "2024",
+    description:
+      "A fullstack web application featuring a Django backend that integrates with the PokeAPI and dynamic Vue.js frontend.",
+    tags: ["VueJS", "Django", "Nginx", "Github Action"],
+    thumbnail: {
+      type: "code",
+      filename: "pokedex.vue",
+      snippet: `export default {
+  data() {
+    return {
+      pokemon: [],
+      loading: true
+    }
+  },
+  async mounted() {
+    this.pokemon = await api.get('/pokemon');
+  }
+}`,
+    },
+    links: [{ label: "View Repo", variant: "outline" }],
+  },
+  {
+    title: "LLM Course Recommender",
+    year: "2024",
+    description:
+      "Machine learning-powered application helping students make data-driven decisions on university courses.",
+    tags: ["Flask", "Python", "LLMs"],
+    thumbnail: {
+      type: "image",
+      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCSRo6X4qJO9DWavQWf0AvRFGgGgfFLJuzoirX56WeifXMzASpzOKtW450nqYo_KVtWee4hXki9RXXWKPFKOjtAGaK6Mew3ZXCkVDGNMohaCGfrKLttWHtxRPYQVKX0qVx8iA6C98-OLjr7zN5Y0KHl5_V7oBpKzsRKK3I9uA6SEAc-5SM2SJW0TnghAokzt6IU8SmxZRh6hBV6gxaejnFzAMZ0TB5qzw4oOYD8F0cZE5xnqJQ1_WyD",
+      alt: "LLM Course Recommender",
+    },
+    links: [{ label: "Github", variant: "outline" }],
+  },
 ];
 
 function App() {
@@ -109,7 +200,7 @@ function App() {
             <a className={getLinkClass("projects")} href="#projects">PROJECTS</a>
             <a className={getLinkClass("contact")} href="#contact">CONTACT</a>
           </div>
-          <a className="px-6 py-2 bg-on-surface text-surface font-medium rounded-sm hover:opacity-90 transition-opacity uppercase text-label-md" href="/latest_resume.pdf" target="_blank" rel="noopener noreferrer">
+          <a className="px-6 py-2 bg-on-surface text-surface font-medium rounded-sm hover:opacity-90 transition-opacity uppercase text-label-md" href={resumePdf} target="_blank" rel="noopener noreferrer">
             Resume
           </a>
         </nav>
@@ -280,120 +371,85 @@ function App() {
               <h2 className="font-headline-lg text-on-surface uppercase text-[48px]">Selected Projects</h2>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Project 1 */}
-              <div className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group">
-                <div className="aspect-video overflow-hidden border-b border-outline-variant">
-                  <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdUqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v" />
-                </div>
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-headline-md text-on-surface uppercase">AI Risk Surveyor Tool</h3>
-                    <span className="font-label-md text-on-surface-variant">2026</span>
-                  </div>
-                  <p className="text-on-surface-variant font-body-md mb-8 flex-grow">
-                    An intelligent document processing and site analysis application built for risk surveyors. Powered by Gemini and a RAG pipeline.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">React</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">FastAPI</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Gemini</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">GCP</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <button className="px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90">Visit Site</button>
-                    <button className="px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container">Github</button>
-                  </div>
-                </div>
-              </div>
-              {/* Project 2 */}
-              <div className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group">
-                <div className="aspect-video overflow-hidden border-b border-outline-variant bg-surface-container-low flex items-center justify-center">
-                  <img className="w-full h-auto" src="/imgs/ouch.png"/>
-                </div>
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-headline-md text-on-surface uppercase">Ouch Core System</h3>
-                    <span className="font-label-md text-on-surface-variant">PRESENT</span>
-                  </div>
-                  <p className="text-on-surface-variant font-body-md mb-8 flex-grow">
-                    Core Maintainer of Ouch!'s central insurtech engine, driving the automated infrastructure that powers the policy lifecycle and claims processing for our digital-first insurance platform.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Django</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">PostgreSQL</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Docker</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">GCP</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <a href="https://ouch.my/" target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 block text-center">Visit Website</a>
-                  </div>
-                </div>
-              </div>
-              {/* Project 3 */}
-              <div className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group">
-                <div className="aspect-video bg-inverse-surface p-6 font-body-md overflow-hidden flex flex-col">
-                  <div className="flex items-center gap-2 mb-4 border-b border-surface-variant pb-2">
-                    <span className="text-surface font-bold">pokedex.vue</span>
-                  </div>
-                  <pre className="text-surface-dim text-xs overflow-hidden">
-                    <code className="italic">
-                      {`export default {
-  data() {
-    return {
-      pokemon: [],
-      loading: true
-    }
-  },
-  async mounted() {
-    this.pokemon = await api.get('/pokemon');
-  }
-}`}
-                    </code>
-                  </pre>
-                </div>
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="font-headline-md text-on-surface uppercase mb-4">Pokedex Fullstack</h3>
-                  <p className="text-on-surface-variant font-body-md mb-8 flex-grow">
-                    A fullstack web application featuring a Django backend that integrates with the PokeAPI and dynamic Vue.js frontend.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">VueJS</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Django</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Nginx</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Github Action</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <button className="px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container">View Repo</button>
+              {projects.map((project) => (
+                <div
+                  key={project.title}
+                  className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group"
+                >
+                  {/* Thumbnail */}
+                  {project.thumbnail.type === "image" ? (
+                    <div className="aspect-video overflow-hidden border-b border-outline-variant bg-surface-container-low flex items-center justify-center">
+                      <img
+                        className="w-full h-full object-cover"
+                        src={project.thumbnail.src}
+                        alt={project.thumbnail.alt ?? project.title}
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-video bg-inverse-surface p-6 font-body-md overflow-hidden flex flex-col">
+                      <div className="flex items-center gap-2 mb-4 border-b border-surface-variant pb-2">
+                        <span className="text-surface font-bold">{project.thumbnail.filename}</span>
+                      </div>
+                      <pre className="text-surface-dim text-xs overflow-hidden">
+                        <code className="italic">{project.thumbnail.snippet}</code>
+                      </pre>
+                    </div>
+                  )}
+
+                  {/* Body */}
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-headline-md text-on-surface uppercase">{project.title}</h3>
+                      <span className="font-label-md text-on-surface-variant">{project.year}</span>
+                    </div>
+                    <p className="text-on-surface-variant font-body-md mb-8 flex-grow">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {project.tags.map((tag) => (
+                        <span key={tag} className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="flex gap-4">
+                      {project.links.map((link) =>
+                        link.href ? (
+                          <a
+                            key={link.label}
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={
+                              link.variant === "primary"
+                                ? "px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 block text-center"
+                                : "px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container"
+                            }
+                          >
+                            {link.label}
+                          </a>
+                        ) : (
+                          <button
+                            key={link.label}
+                            className={
+                              link.variant === "primary"
+                                ? "px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90"
+                                : "px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container"
+                            }
+                          >
+                            {link.label}
+                          </button>
+                        )
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              {/* Project 4 */}
-              <div className="bg-surface border border-outline-variant hover:border-on-surface transition-all duration-300 flex flex-col group">
-                <div className="aspect-video overflow-hidden border-b border-outline-variant">
-                  <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSRo6X4qJO9DWavQWf0AvRFGgGgfFLJuzoirX56WeifXMzASpzOKtW450nqYo_KVtWee4hXki9RXXWKPFKOjtAGaK6Mew3ZXCkVDGNMohaCGfrKLttWHtxRPYQVKX0qVx8iA6C98-OLjr7zN5Y0KHl5_V7oBpKzsRKK3I9uA6SEAc-5SM2SJW0TnghAokzt6IU8SmxZRh6hBV6gxaejnFzAMZ0TB5qzw4oOYD8F0cZE5xnqJQ1_WyD" />
-                </div>
-                <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="font-headline-md text-on-surface uppercase mb-4">LLM Course Recommender</h3>
-                  <p className="text-on-surface-variant font-body-md mb-8 flex-grow">
-                    Machine learning-powered application helping students make data-driven decisions on university courses.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Flask</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">Python</span>
-                    <span className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">LLMs</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <button className="px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container">Github</button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Contact Section */}
-        <section className="py-24 bg-surface-container-low" id="contact">
-          <div className="max-w-7xl mx-auto px-gutter text-center">
+        <section className="py-40 min-h-[60vh] bg-surface-container-low flex items-center" id="contact">
+          <div className="max-w-7xl mx-auto px-gutter text-center w-full">
             <h2 className="font-headline-lg text-on-surface mb-6 uppercase text-[48px]">Get In Touch</h2>
             <p className="text-on-surface-variant font-body-lg max-w-2xl mx-auto mb-16 italic">
               Whether you have a job opportunity, a project you’d like to collaborate on, or simply want to connect with a fellow software engineer, feel free to reach out.
