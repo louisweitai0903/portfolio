@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTimes, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faGithub, faLinkedin, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import "./App.css";
 
@@ -13,7 +13,7 @@ import imgBkkCity from "./assets/imgs/bkk_city.JPG";
 import imgPanda from "./assets/imgs/panda.JPG";
 import imgLangkawi from "./assets/imgs/langkawi_sunset.png";
 import imgOuch from "./assets/imgs/ouch.png";
-import resumePdf from "./assets/latest_resume.pdf?url";
+import resumePdf from "./assets/resume.pdf?url";
 
 const polaroidImages = [
   { alt: "Car Enthusiast", src: imgCars },
@@ -24,10 +24,10 @@ const polaroidImages = [
   { alt: "Bangkok City", src: imgBkkCity },
   { alt: "Panda", src: imgPanda },
   { alt: "Langkawi Sunset", src: imgLangkawi },
-  { alt: "Chongqing", src: imgChongqing }
+  { alt: "Chongqing", src: imgChongqing },
 ];
 
-// ─── Project data ───────────────────────────────────────────────────────────
+// ─── Project data ────────────────────────────────────────────────────────────
 type ProjectThumbnail =
   | { type: "image"; src: string; alt?: string }
   | { type: "code"; filename: string; snippet: string };
@@ -107,9 +107,19 @@ const projects: Project[] = [
   },
 ];
 
+// ─── Nav links ────────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+  { id: "home", label: "HOME" },
+  { id: "about", label: "ABOUT ME" },
+  { id: "stack", label: "MY STACK" },
+  { id: "projects", label: "PROJECTS" },
+  { id: "contact", label: "CONTACT" },
+];
+
 function App() {
   const [activeSection, setActiveSection] = useState("home");
   const [polaroidIndex, setPolaroidIndex] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -133,7 +143,6 @@ function App() {
       let current = "home";
       sections.forEach((section) => {
         const sectionTop = section.offsetTop;
-        // Compensate for fixed top navbar height (64px)
         if (window.scrollY >= sectionTop - 100) {
           const id = section.getAttribute("id");
           if (id) current = id;
@@ -147,36 +156,35 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.15,
-    };
+    const heroSection = document.querySelector("section#home");
+    if (!heroSection) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("section-in-view");
-          entry.target.classList.remove("section-out-view");
-        } else {
-          entry.target.classList.add("section-out-view");
-          entry.target.classList.remove("section-in-view");
-        }
-      });
-    }, observerOptions);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("section-in-view");
+            entry.target.classList.remove("section-out-view");
+          } else {
+            entry.target.classList.add("section-out-view");
+            entry.target.classList.remove("section-in-view");
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 0.15 }
+    );
 
-    const sections = document.querySelectorAll("section");
-    sections.forEach((section) => {
-      section.classList.add("section-out-view");
-      section.classList.add("scroll-section");
-      observer.observe(section);
-    });
+    heroSection.classList.add("section-out-view", "scroll-section");
+    observer.observe(heroSection);
 
-    return () => {
-      sections.forEach((section) => {
-        observer.unobserve(section);
-      });
-    };
+    return () => observer.unobserve(heroSection);
+  }, []);
+
+  // Close mobile menu on scroll
+  useEffect(() => {
+    const close = () => setMobileMenuOpen(false);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => window.removeEventListener("scroll", close);
   }, []);
 
   const getLinkClass = (id: string) => {
@@ -185,75 +193,162 @@ function App() {
       : "hover:text-on-surface transition-colors duration-200 font-label-md text-on-surface-variant text-body-md";
   };
 
+  const handleNavClick = () => setMobileMenuOpen(false);
+
   return (
     <div className="font-body-md text-body-md text-on-surface-variant selection:bg-primary-fixed selection:text-on-primary-fixed bg-background overflow-x-hidden">
-      {/* TopNavBar - Fixed permanently at the top of the viewport */}
+
+      {/* ── Top Nav ── */}
       <header className="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-sm border-b border-outline-variant h-16">
-        <nav className="flex justify-between items-center max-w-7xl mx-auto px-gutter h-full">
-          <div className="font-headline-md text-headline-md font-bold text-on-surface">
+        <nav className="flex justify-between items-center max-w-7xl mx-auto px-4 md:px-8 h-full">
+          {/* Logo */}
+          <div className="font-headline-md text-headline-md font-bold text-on-surface text-sm md:text-base">
             TAI YOONG WEI
           </div>
+
+          {/* Desktop links */}
           <div className="hidden md:flex space-x-8">
-            <a className={getLinkClass("home")} href="#home">HOME</a>
-            <a className={getLinkClass("about")} href="#about">ABOUT ME</a>
-            <a className={getLinkClass("stack")} href="#stack">MY STACK</a>
-            <a className={getLinkClass("projects")} href="#projects">PROJECTS</a>
-            <a className={getLinkClass("contact")} href="#contact">CONTACT</a>
+            {NAV_LINKS.map((link) => (
+              <a key={link.id} className={getLinkClass(link.id)} href={`#${link.id}`}>
+                {link.label}
+              </a>
+            ))}
           </div>
-          <a className="px-6 py-2 bg-on-surface text-surface font-medium rounded-sm hover:opacity-90 transition-opacity uppercase text-label-md" href={resumePdf} target="_blank" rel="noopener noreferrer">
-            Resume
-          </a>
+
+          {/* Right side */}
+          <div className="flex items-center gap-3">
+            <a
+              className="px-4 py-2 md:px-6 bg-on-surface text-surface font-medium rounded-sm hover:opacity-90 transition-opacity uppercase text-label-md"
+              href={resumePdf}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Resume
+            </a>
+            {/* Hamburger — mobile only */}
+            <button
+              className="md:hidden w-10 h-10 flex items-center justify-center text-on-surface"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              aria-label="Toggle menu"
+            >
+              <FontAwesomeIcon icon={mobileMenuOpen ? faTimes : faBars} size="lg" />
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden bg-surface border-b border-outline-variant shadow-lg">
+            <div className="flex flex-col px-4 py-4 gap-5">
+              {NAV_LINKS.map((link) => (
+                <a
+                  key={link.id}
+                  href={`#${link.id}`}
+                  onClick={handleNavClick}
+                  className={`${getLinkClass(link.id)} text-base py-1`}
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
       <main>
-        {/* Hero Section */}
+        {/* ── Hero ── */}
         <section className="relative min-h-screen flex items-center justify-center pt-16 bg-surface-container-low" id="home">
-          <div className="relative z-10 text-center px-gutter max-w-4xl mx-auto">
+          <div className="relative z-10 text-center px-4 md:px-8 max-w-4xl mx-auto">
             <span className="font-label-md text-on-surface-variant tracking-[0.2em] block mb-4 uppercase">LOUIS</span>
-            <h1 className="font-headline-lg text-[48px] md:text-[64px] text-on-surface mb-6 uppercase leading-tight flex flex-wrap justify-center gap-x-4">
+            <h1 className="font-headline-lg text-[40px] sm:text-[52px] md:text-[64px] text-on-surface mb-6 uppercase leading-tight flex flex-wrap justify-center gap-x-4">
               <span>Tai</span>
               <span>Yoong</span>
               <span>Wei</span>
             </h1>
-            <p className="font-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto border-y border-outline-variant py-6">
-              I’m a <span className="text-on-surface font-bold underline decoration-1 underline-offset-4">Fullstack Software Engineer</span> and a lover of cars, gaming, food and travel. Currently based in Petaling Jaya, Malaysia working at Ouch!
+            <p className="font-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto border-y border-outline-variant py-6 text-sm md:text-base">
+              I'm a{" "}
+              <span className="text-on-surface font-bold underline decoration-1 underline-offset-4">
+                Fullstack Software Engineer
+              </span>{" "}
+              and a lover of cars, gaming, food and travel. Currently based in Petaling Jaya, Malaysia working at Ouch!
             </p>
-            <div className="flex items-center justify-center gap-3 bg-surface border border-outline px-6 py-3 rounded-sm inline-flex">
+            <div className="flex items-center justify-center gap-3 bg-surface border border-outline px-5 py-3 rounded-sm inline-flex">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-surface opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              <span className="font-label-md text-on-surface uppercase tracking-wider">Open to Relocation</span>
+              <span className="font-label-md text-on-surface uppercase tracking-wider text-xs md:text-sm">
+                Open to Relocation
+              </span>
             </div>
           </div>
         </section>
 
-        {/* About Me Section */}
-        <section className="py-24 bg-surface" id="about">
-          <div className="max-w-7xl mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        {/* ── About Me ── */}
+        <section className="py-16 md:py-24 bg-surface" id="about">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+            {/* Text */}
             <div className="lg:col-span-7">
-              <h2 className="font-headline-lg text-on-surface mb-8 uppercase border-b-2 border-on-surface inline-block pb-2 text-[36px] md:text-[48px]">A little bit about me</h2>
-              <div className="space-y-6 text-on-surface-variant font-body-lg leading-relaxed">
-                <p>Hi! I'm a Fullstack Software Engineer graduated from Sunway University in April 2025. I am currently based in <strong className="text-on-surface">Petaling Jaya, Malaysia</strong>, where I build seamless and accessible fintech products at <strong className="text-on-surface">Ouch!</strong>. I enjoy bridging the gap between clean backend architecture and intuitive frontend experiences using modern technologies like <span className="text-on-surface font-medium italic">React</span>, <span className="text-on-surface font-medium italic">Django</span> and <span className="text-on-surface font-medium italic">VueJs</span>.</p>
-                <p>When I'm not in front of a code editor, you can usually find me:</p>
+              <h2 className="font-headline-lg text-on-surface mb-6 md:mb-8 uppercase border-b-2 border-on-surface inline-block pb-2 text-[22px] sm:text-[32px] md:text-[48px]">
+                A little bit about me
+              </h2>
+              <div className="space-y-5 text-on-surface-variant font-body-lg leading-relaxed">
+                <p className="text-sm md:text-base">
+                  Hi! I'm a Fullstack Software Engineer graduated from Sunway University in April 2025. I am currently
+                  based in <strong className="text-on-surface">Petaling Jaya, Malaysia</strong>, where I build seamless
+                  and accessible fintech products at <strong className="text-on-surface">Ouch!</strong>. I enjoy
+                  bridging the gap between clean backend architecture and intuitive frontend experiences using modern
+                  technologies like{" "}
+                  <span className="text-on-surface font-medium italic">React</span>,{" "}
+                  <span className="text-on-surface font-medium italic">Django</span> and{" "}
+                  <span className="text-on-surface font-medium italic">VueJs</span>.
+                </p>
+                <p className="text-sm md:text-base">When I'm not in front of a code editor, you can usually find me:</p>
                 <div className="pt-4 border-t border-outline-variant">
-                  <ul className="space-y-4 font-body-md">
-                    <li className="flex gap-4 items-start"><span className="text-on-surface font-bold">01.</span><span className=""><strong>On the road:</strong> Exploring local car culture, driving dynamics, or planning my next road trip.</span></li>
-                    <li className="flex gap-4 items-start"><span className="text-on-surface font-bold">02.</span><span className=""><strong>In a lobby:</strong> Diving into games like Dota2 or CS2.</span></li>
-                    <li className="flex gap-4 items-start"><span className="text-on-surface font-bold">03.</span><span className=""><strong>Exploring:</strong> Traveling to new destinations and hunting down the best local eats.</span></li>
+                  <ul className="space-y-4 font-body-md text-sm md:text-base">
+                    <li className="flex gap-4 items-start">
+                      <span className="text-on-surface font-bold shrink-0">01.</span>
+                      <span>
+                        <strong>On the road:</strong> Car spotting or planning my next
+                        road trip.
+                      </span>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-on-surface font-bold shrink-0">02.</span>
+                      <span>
+                        <strong>In a lobby:</strong> Diving into games like Dota2 or CS2.
+                      </span>
+                    </li>
+                    <li className="flex gap-4 items-start">
+                      <span className="text-on-surface font-bold shrink-0">03.</span>
+                      <span>
+                        <strong>Exploring:</strong> Traveling to new destinations and hunting down the best local eats.
+                      </span>
+                    </li>
                   </ul>
                 </div>
-                <p className="pt-4 border-t border-outline-variant">I love connecting with fellow developers, car enthusiasts, and gamers. Let's chat!</p>
-                <div className="flex gap-6 pt-8 border-t border-outline-variant">
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="mailto:louisweitai@gmail.com" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faEnvelope} size="lg" /></a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.linkedin.com/in/yoong-wei-tai-b4a403306/" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faLinkedin} size="lg" /></a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.instagram.com/louis.tai/" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} size="lg" /></a>
-                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://github.com/Louis-tai0309" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faGithub} size="lg" /></a>
+                <p className="pt-4 border-t border-outline-variant text-sm md:text-base">
+                  I love connecting with fellow developers, car enthusiasts, and gamers. Let's chat!
+                </p>
+                <div className="flex gap-6 pt-6 md:pt-8 border-t border-outline-variant">
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="mailto:louisweitai@gmail.com" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faEnvelope} size="lg" />
+                  </a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.linkedin.com/in/yoong-wei-tai-b4a403306/" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faLinkedin} size="lg" />
+                  </a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://www.instagram.com/louis.tai/" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faInstagram} size="lg" />
+                  </a>
+                  <a className="text-on-surface hover:text-on-surface-variant transition-colors" href="https://github.com/Louis-tai0309" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faGithub} size="lg" />
+                  </a>
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-5 flex justify-center lg:justify-end">
+
+            {/* Polaroid stack — hidden on mobile, visible on lg+ */}
+            <div className="hidden lg:flex lg:col-span-5 justify-end">
               <div className="polaroid-stack">
                 {polaroidImages.map((img, idx) => (
                   <div key={idx} className={getPolaroidClass(idx)}>
@@ -265,29 +360,38 @@ function App() {
           </div>
         </section>
 
-        {/* Experience & Stack Section */}
-        <section className="py-24 bg-surface-container-low" id="stack">
-          <div className="max-w-7xl mx-auto px-gutter">
-            <div className="text-center mb-20">
-              <h2 className="font-headline-lg text-on-surface uppercase tracking-widest text-[32px] md:text-[48px]">My Technical Universe</h2>
+        {/* ── Experience & Stack ── */}
+        <section className="py-16 md:py-24 bg-surface-container-low" id="stack">
+          <div className="max-w-7xl mx-auto px-4 md:px-8">
+            <div className="text-center mb-12 md:mb-20">
+              <h2 className="font-headline-lg text-on-surface uppercase tracking-normal md:tracking-widest text-[22px] sm:text-[32px] md:text-[48px]">
+                My Technical Universe
+              </h2>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24">
-              {/* Left Column: Work Experiences */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-24">
+              {/* Left: Work Experience */}
               <div>
-                <h3 className="font-headline-md text-on-surface mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4">
+                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
                   Work Experiences
                 </h3>
-                <div className="relative space-y-12 pl-12">
-                  {/* Current Job */}
+                <div className="relative space-y-10 md:space-y-12 pl-10 md:pl-12">
+                  {/* Current */}
                   <div className="relative">
                     <div className="absolute -left-8 top-1">
                       <div className="timeline-dot active"></div>
                       <div className="timeline-line"></div>
                     </div>
-                    <div className="bg-surface p-6 border border-outline-variant">
-                      <h4 className="font-headline-md text-on-surface mb-1">Junior Fullstack Software Engineer</h4>
-                      <div className="font-label-md text-on-surface-variant mb-4 uppercase">Ouch! | April 2025 - Present</div>
-                      <p className="text-on-surface-variant font-body-md">Building digital-first insurtech solutions focusing on core system maintenance and feature development.</p>
+                    <div className="bg-surface p-5 md:p-6 border border-outline-variant">
+                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">
+                        Junior Fullstack Software Engineer
+                      </h4>
+                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">
+                        Ouch! | April 2025 - Present
+                      </div>
+                      <p className="text-on-surface-variant font-body-md text-sm">
+                        Building digital-first insurtech solutions focusing on core system maintenance and feature
+                        development.
+                      </p>
                     </div>
                   </div>
                   {/* Internship */}
@@ -295,67 +399,65 @@ function App() {
                     <div className="absolute -left-8 top-1">
                       <div className="timeline-dot"></div>
                     </div>
-                    <div className="bg-surface p-6 border border-outline-variant">
-                      <h4 className="font-headline-md text-on-surface mb-1">Software Engineer Intern</h4>
-                      <div className="font-label-md text-on-surface-variant mb-4 uppercase">Ouch! | Jan 2025 - April 2025</div>
-                      <p className="text-on-surface-variant font-body-md">Contributed to internal tools and the Pokedex project using Django and VueJS.</p>
+                    <div className="bg-surface p-5 md:p-6 border border-outline-variant">
+                      <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">
+                        Software Engineer Intern
+                      </h4>
+                      <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">
+                        Ouch! | Jan 2025 - April 2025
+                      </div>
+                      <p className="text-on-surface-variant font-body-md text-sm">
+                        Contributed to internal tools and the Pokedex project using Django and VueJS.
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div className="mt-16">
-                  <h3 className="font-headline-md text-on-surface mb-8 uppercase border-l-4 border-on-surface pl-4">Languages</h3>
+
+                <div className="mt-12 md:mt-16">
+                  <h3 className="font-headline-md text-on-surface mb-6 md:mb-8 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
+                    Languages
+                  </h3>
                   <div className="flex flex-wrap gap-3">
-                    <span className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant">ENGLISH</span>
-                    <span className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant">MANDARIN</span>
-                    <span className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant">CANTONESE</span>
-                    <span className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant">MALAY</span>
+                    {["ENGLISH", "MANDARIN", "CANTONESE", "MALAY"].map((lang) => (
+                      <span key={lang} className="px-4 py-2 bg-surface-container-high text-on-surface font-label-md border border-outline-variant text-xs">
+                        {lang}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
-              {/* Right Column: Dev Stack */}
+
+              {/* Right: Dev Stack */}
               <div>
-                <h3 className="font-headline-md text-on-surface mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4">
+                <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">
                   Dev Stack
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="bg-surface p-6 border border-outline-variant">
-                    <h4 className="font-label-md text-on-surface font-bold mb-4 border-b border-outline-variant pb-2 uppercase">Languages</h4>
-                    <ul className="font-body-md space-y-2 text-on-surface-variant">
-                      <li>Python</li>
-                      <li>JavaScript</li>
-                      <li>TypeScript</li>
-                    </ul>
-                  </div>
-                  <div className="bg-surface p-6 border border-outline-variant">
-                    <h4 className="font-label-md text-on-surface font-bold mb-4 border-b border-outline-variant pb-2 uppercase">Frameworks</h4>
-                    <ul className="font-body-md space-y-2 text-on-surface-variant">
-                      <li>Django, FastAPI</li>
-                      <li>NodeJs, React</li>
-                      <li>VueJs, Tailwind</li>
-                    </ul>
-                  </div>
-                  <div className="bg-surface p-6 border border-outline-variant">
-                    <h4 className="font-label-md text-on-surface font-bold mb-4 border-b border-outline-variant pb-2 uppercase">Infrastructure</h4>
-                    <ul className="font-body-md space-y-2 text-on-surface-variant">
-                      <li>Docker, GCP</li>
-                      <li>Nginx, CI/CD</li>
-                    </ul>
-                  </div>
-                  <div className="bg-surface p-6 border border-outline-variant">
-                    <h4 className="font-label-md text-on-surface font-bold mb-4 border-b border-outline-variant pb-2 uppercase">AI / ML</h4>
-                    <ul className="font-body-md space-y-2 text-on-surface-variant">
-                      <li>Gemini, Codex</li>
-                      <li>RAG Pipelines</li>
-                    </ul>
-                  </div>
-                  <div className="bg-surface p-6 border border-outline-variant sm:col-span-2">
-                    <h4 className="font-label-md text-on-surface font-bold mb-4 border-b border-outline-variant pb-2 uppercase">Tools &amp; Systems</h4>
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 font-body-md text-on-surface-variant">
-                      <span>Git / Github</span>
-                      <span>PostgreSQL</span>
-                      <span>Prisma ORM</span>
-                      <span>Redis</span>
-                      <span>Postman</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                  {[
+                    { title: "Languages", items: ["Python", "JavaScript", "TypeScript"] },
+                    { title: "Frameworks", items: ["Django, FastAPI", "NodeJs, React", "VueJs, Tailwind"] },
+                    { title: "Infrastructure", items: ["Docker, GCP", "Nginx, CI/CD"] },
+                    { title: "AI / ML", items: ["Gemini, Codex", "RAG Pipelines", "Claude Code"] },
+                  ].map((card) => (
+                    <div key={card.title} className="bg-surface p-5 md:p-6 border border-outline-variant">
+                      <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">
+                        {card.title}
+                      </h4>
+                      <ul className="font-body-md space-y-2 text-on-surface-variant text-sm">
+                        {card.items.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <div className="bg-surface p-5 md:p-6 border border-outline-variant sm:col-span-2">
+                    <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">
+                      Tools &amp; Systems
+                    </h4>
+                    <div className="flex flex-wrap gap-x-4 md:gap-x-6 gap-y-2 font-body-md text-on-surface-variant text-sm">
+                      {["Git / Github", "PostgreSQL", "Prisma ORM", "Redis", "Postman"].map((tool) => (
+                        <span key={tool}>{tool}</span>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -364,13 +466,15 @@ function App() {
           </div>
         </section>
 
-        {/* Projects Section */}
-        <section className="py-24 bg-surface" id="projects">
-          <div className="max-w-7xl mx-auto px-gutter">
-            <div className="mb-16 border-b-2 border-on-surface pb-6 text-center">
-              <h2 className="font-headline-lg text-on-surface uppercase text-[48px]">Selected Projects</h2>
+        {/* ── Projects ── */}
+        <section className="py-16 md:py-24 bg-surface" id="projects">
+          <div className="max-w-7xl mx-auto px-4 md:px-8">
+            <div className="mb-10 md:mb-16 border-b-2 border-on-surface pb-4 md:pb-6 text-center">
+              <h2 className="font-headline-lg text-on-surface uppercase text-[22px] sm:text-[32px] md:text-[48px]">
+                Selected Projects
+              </h2>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
               {projects.map((project) => (
                 <div
                   key={project.title}
@@ -386,9 +490,9 @@ function App() {
                       />
                     </div>
                   ) : (
-                    <div className="aspect-video bg-inverse-surface p-6 font-body-md overflow-hidden flex flex-col">
-                      <div className="flex items-center gap-2 mb-4 border-b border-surface-variant pb-2">
-                        <span className="text-surface font-bold">{project.thumbnail.filename}</span>
+                    <div className="aspect-video bg-inverse-surface p-4 md:p-6 font-body-md overflow-hidden flex flex-col">
+                      <div className="flex items-center gap-2 mb-3 md:mb-4 border-b border-surface-variant pb-2">
+                        <span className="text-surface font-bold text-xs md:text-sm">{project.thumbnail.filename}</span>
                       </div>
                       <pre className="text-surface-dim text-xs overflow-hidden">
                         <code className="italic">{project.thumbnail.snippet}</code>
@@ -397,20 +501,24 @@ function App() {
                   )}
 
                   {/* Body */}
-                  <div className="p-8 flex flex-col flex-grow">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-headline-md text-on-surface uppercase">{project.title}</h3>
-                      <span className="font-label-md text-on-surface-variant">{project.year}</span>
+                  <div className="p-5 md:p-8 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-3 md:mb-4 gap-2">
+                      <h3 className="font-headline-md text-on-surface uppercase text-base md:text-2xl leading-snug">
+                        {project.title}
+                      </h3>
+                      <span className="font-label-md text-on-surface-variant shrink-0 text-xs">{project.year}</span>
                     </div>
-                    <p className="text-on-surface-variant font-body-md mb-8 flex-grow">{project.description}</p>
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <p className="text-on-surface-variant font-body-md mb-6 md:mb-8 flex-grow text-sm">
+                      {project.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
                       {project.tags.map((tag) => (
-                        <span key={tag} className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase">
+                        <span key={tag} className="px-2 py-1 md:px-3 bg-surface-container-high text-on-surface font-label-md uppercase text-xs">
                           {tag}
                         </span>
                       ))}
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-3">
                       {project.links.map((link) =>
                         link.href ? (
                           <a
@@ -420,8 +528,8 @@ function App() {
                             rel="noopener noreferrer"
                             className={
                               link.variant === "primary"
-                                ? "px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 block text-center"
-                                : "px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container"
+                                ? "px-5 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 text-center text-xs"
+                                : "px-5 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container text-xs"
                             }
                           >
                             {link.label}
@@ -431,8 +539,8 @@ function App() {
                             key={link.label}
                             className={
                               link.variant === "primary"
-                                ? "px-6 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90"
-                                : "px-6 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container"
+                                ? "px-5 py-2 bg-on-surface text-surface font-bold uppercase text-label-md hover:opacity-90 text-xs"
+                                : "px-5 py-2 border border-on-surface text-on-surface font-bold uppercase text-label-md hover:bg-surface-container text-xs"
                             }
                           >
                             {link.label}
@@ -447,53 +555,43 @@ function App() {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section className="py-40 min-h-[60vh] bg-surface-container-low flex items-center" id="contact">
-          <div className="max-w-7xl mx-auto px-gutter text-center w-full">
-            <h2 className="font-headline-lg text-on-surface mb-6 uppercase text-[48px]">Get In Touch</h2>
-            <p className="text-on-surface-variant font-body-lg max-w-2xl mx-auto mb-16 italic">
-              Whether you have a job opportunity, a project you’d like to collaborate on, or simply want to connect with a fellow software engineer, feel free to reach out.
+        {/* ── Contact ── */}
+        <section className="py-24 md:py-40 min-h-[60vh] bg-surface-container-low flex items-center" id="contact">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 text-center w-full">
+            <h2 className="font-headline-lg text-on-surface mb-4 md:mb-6 uppercase text-[22px] sm:text-[32px] md:text-[48px]">
+              Get In Touch
+            </h2>
+            <p className="text-on-surface-variant font-body-lg max-w-2xl mx-auto mb-10 md:mb-16 italic text-sm md:text-base">
+              Whether you have a job opportunity, a project you'd like to collaborate on, or simply want to connect with
+              a fellow software engineer, feel free to reach out.
             </p>
-            <div className="flex flex-wrap justify-center items-center gap-12">
-              <a className="group flex flex-col items-center gap-4" href="mailto:louisweitai@gmail.com" target="_blank" rel="noopener noreferrer">
-                <div className="w-16 h-16 rounded-sm bg-surface flex items-center justify-center text-on-surface border border-outline-variant group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
-                  <FontAwesomeIcon icon={faEnvelope} size="2x" />
-                </div>
-                <span className="font-label-md text-on-surface uppercase font-bold tracking-widest">Email</span>
-              </a>
-              <a className="group flex flex-col items-center gap-4" href="https://github.com/Louis-tai0309" target="_blank" rel="noopener noreferrer">
-                <div className="w-16 h-16 rounded-sm bg-surface flex items-center justify-center text-on-surface border border-outline-variant group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
-                  <FontAwesomeIcon icon={faGithub} size="2x" />
-                </div>
-                <span className="font-label-md text-on-surface uppercase font-bold tracking-widest">Github</span>
-              </a>
-              <a className="group flex flex-col items-center gap-4" href="https://www.linkedin.com/in/yoong-wei-tai-b4a403306/" target="_blank" rel="noopener noreferrer">
-                <div className="w-16 h-16 rounded-sm bg-surface flex items-center justify-center text-on-surface border border-outline-variant group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
-                  <FontAwesomeIcon icon={faLinkedin} size="2x" />
-                </div>
-                <span className="font-label-md text-on-surface uppercase font-bold tracking-widest">LinkedIn</span>
-              </a>
-              <a className="group flex flex-col items-center gap-4" href="https://www.instagram.com/louis.tai/" target="_blank" rel="noopener noreferrer">
-                <div className="w-16 h-16 rounded-sm bg-surface flex items-center justify-center text-on-surface border border-outline-variant group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
-                  <FontAwesomeIcon icon={faInstagram} size="2x" />
-                </div>
-                <span className="font-label-md text-on-surface uppercase font-bold tracking-widest">Instagram</span>
-              </a>
+            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+              {[
+                { href: "mailto:louisweitai@gmail.com", icon: faEnvelope, label: "Email" },
+                { href: "https://github.com/Louis-tai0309", icon: faGithub, label: "Github" },
+                { href: "https://www.linkedin.com/in/yoong-wei-tai-b4a403306/", icon: faLinkedin, label: "LinkedIn" },
+                { href: "https://www.instagram.com/louis.tai/", icon: faInstagram, label: "Instagram" },
+              ].map(({ href, icon, label }) => (
+                <a key={label} className="group flex flex-col items-center gap-3 md:gap-4" href={href} target="_blank" rel="noopener noreferrer">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-sm bg-surface flex items-center justify-center text-on-surface border border-outline-variant group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
+                    <FontAwesomeIcon icon={icon} size="xl" />
+                  </div>
+                  <span className="font-label-md text-on-surface uppercase font-bold tracking-widest text-xs">{label}</span>
+                </a>
+              ))}
             </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full py-12 border-t border-outline-variant bg-surface">
-        <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-gutter gap-6">
-          <div className="font-headline-md text-on-surface font-bold uppercase">
+      {/* ── Footer ── */}
+      <footer className="w-full py-8 md:py-12 border-t border-outline-variant bg-surface">
+        <div className="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-4 md:px-8 gap-4 md:gap-6">
+          <div className="font-headline-md text-on-surface font-bold uppercase text-sm md:text-base">
             Tai Yoong Wei
           </div>
           <div className="flex gap-6">
-            <p className="font-label-md text-on-surface-variant uppercase">
-              © 2026 Tai Yoong Wei
-            </p>
+            <p className="font-label-md text-on-surface-variant uppercase text-xs">© 2026 Tai Yoong Wei</p>
           </div>
         </div>
       </footer>

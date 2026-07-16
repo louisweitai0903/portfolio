@@ -20,18 +20,24 @@ body {
 
 .polaroid-stack {
   position: relative;
-  height: 400px;
+  height: clamp(280px, 35vw, 400px);
   width: 100%;
   max-width: 450px;
 }
 
 .polaroid {
   position: absolute;
+  /* Center inside the stack container */
+  top: 50%;
+  left: 50%;
+  width: 85%;
   background: white;
   padding: 12px 12px 48px 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
   border: 1px solid #c4c7c8;
   border-radius: 2px;
+  /* Base: pull back by half own size to truly center, then allow rotation overrides */
+  transform: translate(-50%, -50%);
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), z-index 0.8s ease, opacity 0.8s ease;
 }
 
@@ -40,33 +46,34 @@ body {
   height: 200px;
   object-fit: cover;
   filter: contrast(1.05) brightness(0.95);
+  display: block;
 }
 
 .polaroid-top {
-  transform: rotate(-2deg) translate(0, 0);
+  transform: translate(-50%, -50%) rotate(-2deg);
   z-index: 30;
   opacity: 1;
 }
 
 .polaroid-middle {
-  transform: rotate(3deg) translate(0, 0);
+  transform: translate(-50%, -50%) rotate(3deg);
   z-index: 20;
   opacity: 0;
 }
 
 .polaroid-bottom {
-  transform: rotate(-5deg) translate(0, 0);
+  transform: translate(-50%, -50%) rotate(-5deg);
   z-index: 10;
   opacity: 0;
 }
 
 .polaroid-top:hover {
   z-index: 50;
-  transform: scale(1.08) rotate(0deg) !important;
+  transform: translate(-50%, -50%) scale(1.08) rotate(0deg) !important;
 }
 
 .polaroid-hidden {
-  transform: rotate(-12deg) translate(120px, 60px);
+  transform: translate(-50%, -50%) rotate(-12deg) translateX(120px) translateY(60px);
   z-index: 0;
   opacity: 0;
   pointer-events: none;
