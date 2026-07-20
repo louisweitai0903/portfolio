@@ -14,6 +14,7 @@ import imgPanda from "./assets/imgs/panda.JPG";
 import imgLangkawi from "./assets/imgs/langkawi_sunset.png";
 import imgOuch from "./assets/imgs/ouch.png";
 import imgEduCore from "./assets/imgs/EduCore.png";
+import imgCareerFlow from "./assets/imgs/careerFlow.png";
 import resumePdf from "./assets/resume.pdf?url";
 
 const polaroidImages = [
@@ -78,7 +79,7 @@ const projects: Project[] = [
     role: "Full Stack Developer",
     description:
       "A high-fidelity, AI-powered toolset designed to help job seekers track, organize, and analyze their job applications. Built with a responsive glassmorphic React frontend and a Rust (Axum + SQLx) backend, it coordinates with a Python AI microservice to auto-fill job application forms from URLs, score applicant fit, and manage pipelines persistently in PostgreSQL.",
-    tags: ["React", "Rust", "Axum", "SQLx", "PostgreSQL", "TailwindCSS", "Docker Compose"],
+    tags: ["React", "Rust", "Axum", "SQLx", "PostgreSQL", "TailwindCSS", "Docker"],
     thumbnail: {
       type: "code",
       filename: "backend/src/ai_client.rs",
@@ -110,23 +111,7 @@ const projects: Project[] = [
     description:
       "A highly reusable, schema-driven structured data parser and analyzer microservice. Refactored from a job-tracker dependency into a generalized AI utility built with Python and FastAPI. It offers generic API endpoints for structured data extraction from raw text or binary files (e.g. PDFs), context analysis, and web search grounding with dynamic JSON Schema validation via Google Gemini 2.5 Pro.",
     tags: ["Python", "FastAPI", "Gemini 2.5 Pro", "Docker", "JSON Schema"],
-    thumbnail: {
-      type: "code",
-      filename: "app/main.py",
-      snippet: `@app.post("/extract", response_model=GenericResponse)
-async def extract_data(req: ExtractTextRequest):
-    try:
-        result = await generate_structured(
-            prompt="Extract requested information from text.",
-            response_schema=req.schema_definition,
-            data={"text": req.text},
-            model=req.model,
-            system_instruction=req.system_prompt,
-        )
-        return GenericResponse(result=result, model=req.model or "gemini-2.5-pro")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))`,
-    },
+    thumbnail: { type: "image", src: imgCareerFlow, alt: "CareerFlow AI Job Tracker" },
     links: [
       { label: "Visit Repo", href: "https://github.com/louisweitai0903/ai-service", variant: "outline", iconRight: true }
     ],
@@ -249,7 +234,18 @@ function App() {
   const [projectsDropdownOpen, setProjectsDropdownOpen] = useState(false);
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
 
+  // Escape key listener to close image modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveImageUrl(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       setPolaroidIndex((prev) => (prev + 1) % polaroidImages.length);
@@ -631,89 +627,107 @@ function App() {
             </div>
 
             <div className="flex flex-col divide-y divide-outline-variant">
-              {projects.map((project, i) => (
-                <div key={project.id} id={project.id} className="py-12 md:py-16 scroll-mt-20">
-                  {/* Index + year row */}
-                  <div className="flex items-center gap-4 mb-6 md:mb-8">
-                    <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="h-px flex-1 bg-outline-variant" />
-                    <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
-                      {project.year}
-                    </span>
-                  </div>
+              {projects.map((project, i) => {
+                const isImage = project.thumbnail.type === "image";
+                const imageSrc = isImage ? (project.thumbnail as any).src : "";
+                const imageAlt = isImage ? (project.thumbnail as any).alt : "";
+                const isCode = project.thumbnail.type === "code";
+                const codeFilename = isCode ? (project.thumbnail as any).filename : "";
+                const codeSnippet = isCode ? (project.thumbnail as any).snippet : "";
 
-                  {/* Card: image left, content right */}
-                  <div className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-8 md:gap-12 items-start`}>
-
-                    {/* Thumbnail */}
-                    <div className="w-full md:w-[45%] shrink-0">
-                      {project.thumbnail.type === "image" ? (
-                        <div className="aspect-video overflow-hidden border border-outline-variant bg-surface-container-low">
-                          <img
-                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                            src={project.thumbnail.src}
-                            alt={project.thumbnail.alt ?? project.title}
-                          />
-                        </div>
-                      ) : (
-                        <div className="aspect-video bg-inverse-surface p-4 md:p-6 overflow-hidden flex flex-col border border-outline-variant">
-                          <div className="flex items-center gap-2 mb-3 border-b border-surface-variant pb-2">
-                            <span className="text-surface font-bold text-xs md:text-sm">{project.thumbnail.filename}</span>
-                          </div>
-                          <pre className="text-surface-dim text-xs overflow-hidden flex-1">
-                            <code className="italic">{project.thumbnail.snippet}</code>
-                          </pre>
-                        </div>
-                      )}
+                return (
+                  <div key={project.id} id={project.id} className="py-12 md:py-16 scroll-mt-20">
+                    {/* Index + year row */}
+                    <div className="flex items-center gap-4 mb-6 md:mb-8">
+                      <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="h-px flex-1 bg-outline-variant" />
+                      <span className="font-label-md text-on-surface-variant text-xs tracking-widest uppercase">
+                        {project.year}
+                      </span>
                     </div>
 
-                    {/* Content */}
-                    <div className="flex flex-col flex-1">
-                      {/* Role badge */}
-                      <span className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
-                        {project.role}
-                      </span>
+                    {/* Card: image left, content right */}
+                    <div className={`flex flex-col ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} gap-8 md:gap-12 items-start`}>
 
-                      {/* Title */}
-                      <h3 className="font-headline-lg text-on-surface uppercase text-[20px] sm:text-[26px] md:text-[32px] leading-tight mb-4 md:mb-6">
-                        {project.title}
-                      </h3>
-
-                      {/* Divider */}
-                      <div className="h-px bg-outline-variant mb-4 md:mb-6" />
-
-                      {/* Overview */}
-                      <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-2">
-                        Project Overview
-                      </p>
-                      <p className="text-on-surface-variant font-body-md text-sm leading-relaxed mb-6 md:mb-8">
-                        {project.description}
-                      </p>
-
-                      {/* Tags */}
-                      <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
-                        Tech Stack
-                      </p>
-                      <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
-                        {project.tags.map((tag) => (
-                          <span key={tag} className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase text-xs border border-outline-variant">
-                            {tag}
-                          </span>
-                        ))}
+                      {/* Thumbnail */}
+                      <div className="w-full md:w-[45%] shrink-0">
+                        {isImage ? (
+                          <div
+                            className="relative aspect-video overflow-hidden border border-outline-variant bg-surface-container-low cursor-zoom-in group/img"
+                            onClick={() => setActiveImageUrl(imageSrc)}
+                          >
+                            <img
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                              src={imageSrc}
+                              alt={imageAlt || project.title}
+                            />
+                            {/* Hover Glass Overlay */}
+                            <div className="absolute inset-0 bg-black/15 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                              <div className="w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-on-surface shadow-lg transform translate-y-2 group-hover/img:translate-y-0 transition-all duration-300">
+                                <span className="material-symbols-outlined text-2xl">zoom_in</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="aspect-video bg-inverse-surface p-4 md:p-6 overflow-hidden flex flex-col border border-outline-variant">
+                            <div className="flex items-center gap-2 mb-3 border-b border-surface-variant pb-2">
+                              <span className="text-surface font-bold text-xs md:text-sm">{codeFilename}</span>
+                            </div>
+                            <pre className="text-surface-dim text-xs overflow-hidden flex-1">
+                              <code className="italic">{codeSnippet}</code>
+                            </pre>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Links */}
-                      {project.links && project.links.length > 0 && (
-                        <div className="flex flex-wrap gap-3">
-                          {project.links.map((link) => renderProjectLink(link))}
+                      {/* Content */}
+                      <div className="flex flex-col flex-1">
+                        {/* Role badge */}
+                        <span className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
+                          {project.role}
+                        </span>
+
+                        {/* Title */}
+                        <h3 className="font-headline-lg text-on-surface uppercase text-[20px] sm:text-[26px] md:text-[32px] leading-tight mb-4 md:mb-6">
+                          {project.title}
+                        </h3>
+
+                        {/* Divider */}
+                        <div className="h-px bg-outline-variant mb-4 md:mb-6" />
+
+                        {/* Overview */}
+                        <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-2">
+                          Project Overview
+                        </p>
+                        <p className="text-on-surface-variant font-body-md text-sm leading-relaxed mb-6 md:mb-8">
+                          {project.description}
+                        </p>
+
+                        {/* Tags */}
+                        <p className="font-label-md text-on-surface-variant uppercase tracking-widest text-xs mb-3">
+                          Tech Stack
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-6 md:mb-8">
+                          {project.tags.map((tag) => (
+                            <span key={tag} className="px-3 py-1 bg-surface-container-high text-on-surface font-label-md uppercase text-xs border border-outline-variant">
+                              {tag}
+                            </span>
+                          ))}
                         </div>
-                      )}
+
+                        {/* Links */}
+                        {project.links && project.links.length > 0 && (
+                          <div className="flex flex-wrap gap-3">
+                            {project.links.map((link) => renderProjectLink(link))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
@@ -754,6 +768,27 @@ function App() {
           <p className="font-label-md text-on-surface-variant uppercase text-xs">© 2026 Tai Yoong Wei</p>
         </div>
       </footer>
+      {/* ── Image Lightbox Modal ── */}
+      {activeImageUrl && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center cursor-zoom-out lightbox-overlay"
+          onClick={() => setActiveImageUrl(null)}
+        >
+          <button
+            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center text-2xl transition-colors duration-200"
+            onClick={() => setActiveImageUrl(null)}
+            aria-label="Close image"
+          >
+            &times;
+          </button>
+          <img
+            src={activeImageUrl}
+            alt="Expanded project preview"
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl lightbox-image"
+            onClick={(e) => e.stopPropagation()} // Prevent modal from closing when clicking image itself
+          />
+        </div>
+      )}
     </div>
   );
 }
