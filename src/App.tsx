@@ -104,32 +104,28 @@ const projects: Project[] = [
   },
   {
     id: "careerflow-ai-service",
-    title: "CareerFlow AI Microservice",
+    title: "Generalized AI Service",
     year: "2026",
     role: "Backend & AI Engineer",
     description:
-      "An intelligent, lightweight microservice developed in Python and FastAPI to run Gemini LLM workflows. It parses PDF resumes into structured JSON profiles, compares them against scraped job postings via Google Search Grounding to evaluate fit scores and identify missing skills, and stores user profiles locally with direct API update endpoints.",
-    tags: ["Python", "FastAPI", "Gemini 2.5 Pro", "Docker", "PyMuPDF"],
+      "A highly reusable, schema-driven structured data parser and analyzer microservice. Refactored from a job-tracker dependency into a generalized AI utility built with Python and FastAPI. It offers generic API endpoints for structured data extraction from raw text or binary files (e.g. PDFs), context analysis, and web search grounding with dynamic JSON Schema validation via Google Gemini 2.5 Pro.",
+    tags: ["Python", "FastAPI", "Gemini 2.5 Pro", "Docker", "JSON Schema"],
     thumbnail: {
       type: "code",
-      filename: "app/gemini_client.py",
-      snippet: `def _dict_to_schema(schema_dict: dict) -> types.Schema:
-  type_map = {
-    "string": types.Type.STRING,
-    "integer": types.Type.INTEGER,
-    "number": types.Type.NUMBER,
-    "boolean": types.Type.BOOLEAN,
-    "array": types.Type.ARRAY,
-    "object": types.Type.OBJECT,
-  }
-  kwargs: dict[str, Any] = {}
-  raw_type = schema_dict.get("type", "string")
-  kwargs["type"] = type_map.get(raw_type, types.Type.STRING)
-  if "properties" in schema_dict:
-    kwargs["properties"] = {
-      k: _dict_to_schema(v) for k, v in schema_dict["properties"].items()
-    }
-  return types.Schema(**kwargs)`,
+      filename: "app/main.py",
+      snippet: `@app.post("/extract", response_model=GenericResponse)
+async def extract_data(req: ExtractTextRequest):
+    try:
+        result = await generate_structured(
+            prompt="Extract requested information from text.",
+            response_schema=req.schema_definition,
+            data={"text": req.text},
+            model=req.model,
+            system_instruction=req.system_prompt,
+        )
+        return GenericResponse(result=result, model=req.model or "gemini-2.5-pro")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))`,
     },
     links: [
       { label: "Visit Repo", href: "https://github.com/louisweitai0903/ai-service", variant: "outline", iconRight: true }
