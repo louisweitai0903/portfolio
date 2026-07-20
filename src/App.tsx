@@ -15,6 +15,8 @@ import imgLangkawi from "./assets/imgs/langkawi_sunset.png";
 import imgOuch from "./assets/imgs/ouch.png";
 import imgEduCore from "./assets/imgs/EduCore.png";
 import imgCareerFlow from "./assets/imgs/careerFlow.png";
+import imgRiskEngine from "./assets/imgs/riskEngine.png";
+import imgAiServiceArchitecture from "./assets/imgs/ai_service_architecture.jpg";
 import resumePdf from "./assets/resume.pdf?url";
 
 const polaroidImages = [
@@ -64,7 +66,7 @@ const projects: Project[] = [
     tags: ["React", "FastAPI", "Gemini", "GCP", "RAG"],
     thumbnail: {
       type: "image",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdWqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v",
+      src: imgRiskEngine,
       alt: "AI Risk Surveyor Tool",
     },
     // links: [
@@ -80,25 +82,7 @@ const projects: Project[] = [
     description:
       "A high-fidelity, AI-powered toolset designed to help job seekers track, organize, and analyze their job applications. Built with a responsive glassmorphic React frontend and a Rust (Axum + SQLx) backend, it coordinates with a Python AI microservice to auto-fill job application forms from URLs, score applicant fit, and manage pipelines persistently in PostgreSQL.",
     tags: ["React", "Rust", "Axum", "SQLx", "PostgreSQL", "TailwindCSS", "Docker"],
-    thumbnail: {
-      type: "code",
-      filename: "backend/src/ai_client.rs",
-      snippet: `impl AiClient {
-  pub async fn analyse_job(&self, job_text: &str) -> Result<Value> {
-    let body = serde_json::json!({ "job_text": job_text });
-    let res = self
-      .http
-      .post(format!("{}/resume/analyse-job", self.base_url))
-      .json(&body)
-      .send()
-      .await?;
-    if !res.status().is_success() {
-      return Err(anyhow!("Failed to analyse job description"));
-    }
-    Ok(res.json().await?)
-  }
-}`,
-    },
+    thumbnail: { type: "image", src: imgCareerFlow, alt: "CareerFlow AI Job Tracker" },
     links: [
       { label: "Visit Repo", href: "https://github.com/louisweitai0903/job-tracker", variant: "outline", iconRight: true }
     ],
@@ -111,7 +95,7 @@ const projects: Project[] = [
     description:
       "A highly reusable, schema-driven structured data parser and analyzer microservice. Refactored from a job-tracker dependency into a generalized AI utility built with Python and FastAPI. It offers generic API endpoints for structured data extraction from raw text or binary files (e.g. PDFs), context analysis, and web search grounding with dynamic JSON Schema validation via Google Gemini 2.5 Pro.",
     tags: ["Python", "FastAPI", "Gemini 2.5 Pro", "Docker", "JSON Schema"],
-    thumbnail: { type: "image", src: imgCareerFlow, alt: "CareerFlow AI Job Tracker" },
+    thumbnail: { type: "image", src: imgAiServiceArchitecture, alt: "Generalized AI Service Architecture Diagram" },
     links: [
       { label: "Visit Repo", href: "https://github.com/louisweitai0903/ai-service", variant: "outline", iconRight: true }
     ],
