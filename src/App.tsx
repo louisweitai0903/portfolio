@@ -478,7 +478,7 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="hidden lg:flex lg:col-span-5 justify-end">
+            <div className="hidden lg:flex lg:col-span-5 justify-center">
               <div className="polaroid-stack">
                 {polaroidImages.map((img, idx) => (
                   <div key={idx} className={getPolaroidClass(idx)}>
