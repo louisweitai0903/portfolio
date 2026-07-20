@@ -63,13 +63,77 @@ const projects: Project[] = [
     tags: ["React", "FastAPI", "Gemini", "GCP", "RAG"],
     thumbnail: {
       type: "image",
-      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdUqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v",
+      src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCVjQx6J_DNBfr0HcrwzvPSZz_wpGfKcelbSC2joqdW_ZLDgrocwW16dNqJNBrTxiixK2pNsMVjHFtz3RsslFj7nu1F8nW6pi3pHQnx9jKepmHZEmNIZfq9Lqj2N0j1-UEnJ3cHDaQJFqdWqlId4ZeZkTzZet8PvBhrCcTKGimIRqjQejNFT9NsoTHE_jEOzJYQTgsGxl9pT2Ta1v44g3JlVK9dLs3kSk6sFJ-FfqZB9RrTda0oJD9v",
       alt: "AI Risk Surveyor Tool",
     },
     // links: [
     //   { label: "Visit Site", variant: "primary" },
     //   { label: "Visit Repo", variant: "outline", iconRight: true },
     // ],
+  },
+  {
+    id: "careerflow-job-tracker",
+    title: "CareerFlow AI Job Tracker",
+    year: "2026",
+    role: "Full Stack Developer",
+    description:
+      "A high-fidelity, AI-powered toolset designed to help job seekers track, organize, and analyze their job applications. Built with a responsive glassmorphic React frontend and a Rust (Axum + SQLx) backend, it coordinates with a Python AI microservice to auto-fill job application forms from URLs, score applicant fit, and manage pipelines persistently in PostgreSQL.",
+    tags: ["React", "Rust", "Axum", "SQLx", "PostgreSQL", "TailwindCSS", "Docker Compose"],
+    thumbnail: {
+      type: "code",
+      filename: "backend/src/ai_client.rs",
+      snippet: `impl AiClient {
+  pub async fn analyse_job(&self, job_text: &str) -> Result<Value> {
+    let body = serde_json::json!({ "job_text": job_text });
+    let res = self
+      .http
+      .post(format!("{}/resume/analyse-job", self.base_url))
+      .json(&body)
+      .send()
+      .await?;
+    if !res.status().is_success() {
+      return Err(anyhow!("Failed to analyse job description"));
+    }
+    Ok(res.json().await?)
+  }
+}`,
+    },
+    links: [
+      { label: "Visit Repo", href: "https://github.com/louisweitai0903/job-tracker", variant: "outline", iconRight: true }
+    ],
+  },
+  {
+    id: "careerflow-ai-service",
+    title: "CareerFlow AI Microservice",
+    year: "2026",
+    role: "Backend & AI Engineer",
+    description:
+      "An intelligent, lightweight microservice developed in Python and FastAPI to run Gemini LLM workflows. It parses PDF resumes into structured JSON profiles, compares them against scraped job postings via Google Search Grounding to evaluate fit scores and identify missing skills, and stores user profiles locally with direct API update endpoints.",
+    tags: ["Python", "FastAPI", "Gemini 2.5 Pro", "Docker", "PyMuPDF"],
+    thumbnail: {
+      type: "code",
+      filename: "app/gemini_client.py",
+      snippet: `def _dict_to_schema(schema_dict: dict) -> types.Schema:
+  type_map = {
+    "string": types.Type.STRING,
+    "integer": types.Type.INTEGER,
+    "number": types.Type.NUMBER,
+    "boolean": types.Type.BOOLEAN,
+    "array": types.Type.ARRAY,
+    "object": types.Type.OBJECT,
+  }
+  kwargs: dict[str, Any] = {}
+  raw_type = schema_dict.get("type", "string")
+  kwargs["type"] = type_map.get(raw_type, types.Type.STRING)
+  if "properties" in schema_dict:
+    kwargs["properties"] = {
+      k: _dict_to_schema(v) for k, v in schema_dict["properties"].items()
+    }
+  return types.Schema(**kwargs)`,
+    },
+    links: [
+      { label: "Visit Repo", href: "https://github.com/louisweitai0903/ai-service", variant: "outline", iconRight: true }
+    ],
   },
   {
     id: "ouch-core",
