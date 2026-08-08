@@ -550,7 +550,17 @@ function App() {
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">
                       <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">Junior Fullstack Software Engineer</h4>
                       <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">Ouch! | April 2025 - Present</div>
-                      <p className="text-on-surface-variant font-body-md text-sm">Building digital-first insurtech solutions focusing on core system maintenance and feature development.</p>
+                      <div className="text-on-surface-variant font-body-md text-sm space-y-4">
+                        <p>
+                          <strong className="text-on-surface">End-to-End AI Integration:</strong> Architected and deployed an AI-driven data parser and risk analysis pipeline using a Gemini-powered React and FastAPI stack with Retrieval-Augmented Generation (RAG). Successfully navigated vague client requirements to deliver a solution that evaluates user data against FM Global standards, reducing manual input time for risk surveyors by 75%.
+                        </p>
+                        <p>
+                          <strong className="text-on-surface">Backend Architecture & Automation:</strong> Developed and maintained core Django backend modules—including a highly-utilized claims module and robust REST APIs—supporting rapid new product rollouts. Engineered cron-based automation scripts to enforce critical business rules (e.g., preventing advance payments and post-cut-off purchases), eliminating manual oversight and ensuring strict compliance with product lifecycles.
+                        </p>
+                        <p>
+                          <strong className="text-on-surface">Infrastructure & Deployment:</strong> Containerized legacy and modern microservices using Docker, standardizing local development environments and reducing deployment friction across testing and production servers.
+                        </p>
+                      </div>
                     </div>
                   </div>
                   <div className="relative">
