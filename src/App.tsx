@@ -219,6 +219,36 @@ function App() {
   const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [activeImageUrl, setActiveImageUrl] = useState<string | null>(null);
+  const [lineStyle, setLineStyle] = useState<React.CSSProperties>({ height: 0 });
+  const dot1Ref = useRef<HTMLDivElement>(null);
+  const dot2Ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updateLine = () => {
+      if (dot1Ref.current && dot2Ref.current) {
+        const dot1Rect = dot1Ref.current.getBoundingClientRect();
+        const dot2Rect = dot2Ref.current.getBoundingClientRect();
+        const distance = dot2Rect.top - dot1Rect.top;
+        setLineStyle({
+          height: `${distance}px`
+        });
+      }
+    };
+
+    updateLine();
+
+    const observer = new ResizeObserver(updateLine);
+    if (dot1Ref.current) observer.observe(dot1Ref.current);
+    const parentContainer = document.querySelector("#stack");
+    if (parentContainer) observer.observe(parentContainer);
+
+    window.addEventListener("resize", updateLine);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateLine);
+    };
+  }, []);
 
   // Escape key listener to close image modal
   useEffect(() => {
@@ -543,9 +573,9 @@ function App() {
                 <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">Work Experiences</h3>
                 <div className="relative space-y-10 md:space-y-12 pl-10 md:pl-12">
                   <div className="relative">
-                    <div className="absolute -left-8 top-1">
+                    <div className="absolute -left-8 top-1" ref={dot1Ref}>
                       <div className="timeline-dot active"></div>
-                      <div className="timeline-line"></div>
+                      <div className="timeline-line" style={lineStyle}></div>
                     </div>
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">
                       <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">Junior Fullstack Software Engineer</h4>
@@ -564,7 +594,7 @@ function App() {
                     </div>
                   </div>
                   <div className="relative">
-                    <div className="absolute -left-8 top-1">
+                    <div className="absolute -left-8 top-1" ref={dot2Ref}>
                       <div className="timeline-dot"></div>
                     </div>
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">

@@ -83,8 +83,7 @@ body {
   width: 1px;
   background: #c4c7c8;
   position: absolute;
-  top: 16px;
-  height: calc(100% + 11rem);
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
