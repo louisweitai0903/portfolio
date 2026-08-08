@@ -570,7 +570,17 @@ function App() {
                     <div className="bg-surface p-5 md:p-6 border border-outline-variant">
                       <h4 className="font-headline-md text-on-surface mb-1 text-base md:text-2xl">Software Engineer Intern</h4>
                       <div className="font-label-md text-on-surface-variant mb-3 md:mb-4 uppercase text-xs">Ouch! | Jan 2025 - April 2025</div>
-                      <p className="text-on-surface-variant font-body-md text-sm">Contributed to internal tools and the Pokedex project using Django and VueJS.</p>
+                      <div className="text-on-surface-variant font-body-md text-sm space-y-4">
+                        <p>
+                          <strong className="text-on-surface">Web Application Development:</strong> Built dynamic, data-intensive web applications using Vue.js and REST APIs, focusing on efficient state management and frontend data rendering.
+                        </p>
+                        <p>
+                          <strong className="text-on-surface">DevOps & CI/CD:</strong> Established automated deployment pipelines by configuring Nginx as a reverse proxy and implementing GitHub Actions, accelerating release cycles and minimizing manual deployment errors.
+                        </p>
+                        <p>
+                          <strong className="text-on-surface">Environment Standardization:</strong> Packaged applications into Docker containers to ensure 100% parity between development and production environments, enhancing project portability.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
