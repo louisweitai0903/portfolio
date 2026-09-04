@@ -17,7 +17,6 @@ import imgEduCore from "./assets/imgs/EduCore.png";
 import imgCareerFlow from "./assets/imgs/careerFlow.png";
 import imgRiskEngine from "./assets/imgs/riskEngine.png";
 import imgAiServiceArchitecture from "./assets/imgs/ai_service_architecture.jpg";
-import resumePdf from "./assets/resume.pdf?url";
 
 const polaroidImages = [
   { alt: "Car Enthusiast", src: imgCars },
@@ -400,14 +399,6 @@ function App() {
 
           {/* Right side */}
           <div className="flex items-center gap-3">
-            <a
-              className="px-4 py-2 md:px-6 bg-on-surface text-surface font-medium rounded-sm hover:opacity-90 transition-opacity uppercase text-label-md"
-              href={resumePdf}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Resume
-            </a>
             <button
               className="md:hidden w-10 h-10 flex items-center justify-center text-on-surface"
               onClick={() => setMobileMenuOpen((v) => !v)}
