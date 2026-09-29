@@ -6,6 +6,8 @@ The portfolio site is fully recreated as a high-fidelity, responsive single-page
 
 We have updated the `Project` interface to support projects without active repo or site links by making the `links` property optional and conditionally rendering the links section.
 
+Latest change (2026-09-29): added Kiko Matcha as the first (latest) project using its Open Graph image (`src/assets/imgs/kikoMatcha.jpg`) as the logo thumbnail, and set the AI Powered Risk Surveyor dates to Mar 2026 – Jun 2026, and added SQL, NextJs, Medusa, ERPNext and Payment Gateways to the Dev Stack cards.
+
 ## Failed Attempts
 
 - None during this session.
@@ -14,7 +16,7 @@ We have updated the `Project` interface to support projects without active repo 
 
 - **Project Health**: Healthy Vite React build. Both `npm run lint` and `npm run build` pass cleanly.
 - **Active Work**: Completed making the project `links` property optional and updating the UI render path to handle undefined or empty links arrays.
-- **Known Issues**: None.
+- **Known Issues**: `npm run lint` reports 4 pre-existing `no-explicit-any` errors (`project.thumbnail as any`) in `src/App.tsx`.
 - **Blockers**: None.
 
 ## Progress Summary

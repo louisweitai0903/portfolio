@@ -2,14 +2,15 @@
 
 ## Current Version
 
-1.24.0
+1.25.0
 
 ## Project Health
 
-Healthy. The application is built with Vite 6, React, and TypeScript. All compilation and lint tests succeed.
+Healthy. The application is built with Vite 6, React, and TypeScript. The build succeeds; `npm run lint` reports 4 pre-existing `no-explicit-any` errors in the project render block.
 
 ## Completed Features
 
+- Added **Kiko Matcha** (Core PIC, https://kikomatcha.my/) as the latest project and dated the AI Powered Risk Surveyor project Mar 2026 – Jun 2026. Dev Stack now lists SQL, NextJs, Medusa, ERPNext and Payment Gateways.
 - Made the `links` property in the `Project` interface optional and configured the portfolio interface to conditionally render the project actions container only if `links` is defined and contains elements.
 - Connected to the **Stitch MCP** server to discover user projects and retrieve screen assets.
 - Recreated the high-fidelity portfolio designed by Stitch inside React (`src/App.tsx`, `src/App.css`, `index.html`).
@@ -31,7 +32,7 @@ Healthy. The application is built with Vite 6, React, and TypeScript. All compil
 
 ## Known Issues
 
-- None.
+- `npm run lint` fails on 4 `as any` casts of `project.thumbnail` in `src/App.tsx` (pre-existing).
 
 ## Technical Debt
 

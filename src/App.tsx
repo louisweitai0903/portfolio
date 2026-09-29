@@ -17,6 +17,7 @@ import imgEduCore from "./assets/imgs/EduCore.png";
 import imgCareerFlow from "./assets/imgs/careerFlow.png";
 import imgRiskEngine from "./assets/imgs/riskEngine.png";
 import imgAiServiceArchitecture from "./assets/imgs/ai_service_architecture.jpg";
+import imgKikoMatcha from "./assets/imgs/kikoMatcha.jpg";
 
 const polaroidImages = [
   { alt: "Car Enthusiast", src: imgCars },
@@ -56,9 +57,20 @@ interface Project {
 
 const projects: Project[] = [
   {
+    id: "kiko-matcha",
+    title: "Kiko Matcha",
+    year: "2026 - PRESENT",
+    role: "Full Stack Developer",
+    description:
+      "Core person-in-charge for Kiko Matcha, a Kuala Lumpur-based direct-to-consumer brand selling stone-milled ceremonial matcha. The storefront is built with Next.js on a Medusa commerce backend, integrated with ERPNext for inventory and order operations, a payment gateway for checkout, and Redis caching over a SQL database.",
+    tags: ["Next.js", "Medusa", "ERPNext", "Payment Gateway", "Redis", "SQL"],
+    thumbnail: { type: "image", src: imgKikoMatcha, alt: "Kiko Matcha logo" },
+    links: [{ label: "Visit Website", href: "https://kikomatcha.my/", variant: "primary" }],
+  },
+  {
     id: "ai-risk-surveyor",
     title: "AI Powered Risk Surveyor",
-    year: "2026 - PRESENT",
+    year: "MAR 2026 - JUN 2026",
     role: "Full Stack Developer",
     description:
       "An intelligent document processing and site analysis application built for risk surveyors. Powered by Gemini and a RAG pipeline, it automates the extraction of structured data from unstructured documents and generates comprehensive risk reports.",
@@ -75,7 +87,7 @@ const projects: Project[] = [
   },
   {
     id: "careerflow-job-tracker",
-    title: "CareerFlow AI Job Tracker",
+    title: "CareerFlow",
     year: "2026",
     role: "Full Stack Developer",
     description:
@@ -88,7 +100,7 @@ const projects: Project[] = [
   },
   {
     id: "careerflow-ai-service",
-    title: "Generalized AI Service",
+    title: "AI Service Engine",
     year: "2026",
     role: "Backend & AI Engineer",
     description:
@@ -618,8 +630,8 @@ function App() {
                 <h3 className="font-headline-md text-on-surface mb-8 md:mb-12 flex items-center gap-3 uppercase border-l-4 border-on-surface pl-4 text-lg md:text-2xl">Dev Stack</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {[
-                    { title: "Languages", items: ["Python", "JavaScript", "TypeScript"] },
-                    { title: "Frameworks", items: ["Django, FastAPI", "NodeJs, React", "VueJs, Tailwind"] },
+                    { title: "Languages", items: ["Python", "JavaScript", "TypeScript", "SQL"] },
+                    { title: "Frameworks", items: ["Django, FastAPI", "NodeJs, React", "NextJs, Medusa", "VueJs, Tailwind"] },
                     { title: "Infrastructure", items: ["Docker, GCP", "Nginx, CI/CD"] },
                     { title: "AI / ML", items: ["Gemini, Codex", "RAG Pipelines"] },
                   ].map((card) => (
@@ -633,7 +645,7 @@ function App() {
                   <div className="bg-surface p-5 md:p-6 border border-outline-variant sm:col-span-2">
                     <h4 className="font-label-md text-on-surface font-bold mb-3 md:mb-4 border-b border-outline-variant pb-2 uppercase text-xs">Tools &amp; Systems</h4>
                     <div className="flex flex-wrap gap-x-4 md:gap-x-6 gap-y-2 font-body-md text-on-surface-variant text-sm">
-                      {["Git / Github", "PostgreSQL", "Prisma ORM", "Redis", "Postman"].map((tool) => <span key={tool}>{tool}</span>)}
+                      {["Git / Github", "PostgreSQL", "Prisma ORM", "Redis", "ERPNext", "Payment Gateways", "Postman"].map((tool) => <span key={tool}>{tool}</span>)}
                     </div>
                   </div>
                 </div>

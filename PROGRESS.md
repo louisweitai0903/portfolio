@@ -1,5 +1,34 @@
 # PROGRESS
 
+## 2026-09-29
+
+### Task Description
+
+Add Kiko Matcha as the latest project, add its stack to the Dev Stack section, and set the AI Powered Risk Surveyor dates to Mar 2026 – Jun 2026.
+
+### Files Modified
+
+- [App.tsx](file:///Users/louis/coding/portfolio/src/App.tsx)
+- [kikoMatcha.jpg](file:///Users/louis/coding/portfolio/src/assets/imgs/kikoMatcha.jpg) (new; Open Graph image from kikomatcha.my, which includes the brand logo)
+- [STATUS.md](file:///Users/louis/coding/portfolio/STATUS.md)
+- [PROGRESS.md](file:///Users/louis/coding/portfolio/PROGRESS.md)
+- [HANDOFF.md](file:///Users/louis/coding/portfolio/HANDOFF.md)
+
+### Summary of Implementation
+
+- Added a `kiko-matcha` entry at the top of `projects` (role "Core PIC", Next.js / Medusa / ERPNext / Payment Gateway / Redis / SQL, "Visit Website" link to https://kikomatcha.my/).
+- Changed the `ai-risk-surveyor` year label from "2026 - PRESENT" to "MAR 2026 - JUN 2026".
+- Updated the Dev Stack cards: added SQL (Languages), NextJs and Medusa (Frameworks), ERPNext and Payment Gateways (Tools & Systems).
+
+### Validation Performed
+
+- `npm run build` succeeds.
+- `npm run lint` reports 4 pre-existing `no-explicit-any` errors in the project render block (`project.thumbnail as any`); none were introduced by this task.
+
+### Remaining Concerns
+
+- Pre-existing `as any` lint errors should be fixed by narrowing on the `ProjectThumbnail` union.
+
 ## 2026-07-16
 
 ### Task Description
